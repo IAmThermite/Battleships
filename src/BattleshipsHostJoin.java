@@ -1,6 +1,7 @@
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
+import java.io.*;
 
 public class BattleshipsHostJoin extends JPanel implements ActionListener {
     
@@ -8,9 +9,6 @@ public class BattleshipsHostJoin extends JPanel implements ActionListener {
     private JPanel mainPanel;
     private JPanel hostPanel;
     private JPanel joinPanel;
-    
-    //the current panel will be removed when another is added
-    private JPanel currentPanel;
     
     //components for the mainPanel
     private JButton mainHostButton;
@@ -37,7 +35,6 @@ public class BattleshipsHostJoin extends JPanel implements ActionListener {
     
     //constructor
     public BattleshipsHostJoin() {
-    
         GridBagConstraints c = new GridBagConstraints(); //make the constraints for the layout
         
         //
@@ -52,9 +49,11 @@ public class BattleshipsHostJoin extends JPanel implements ActionListener {
         mainHostButton.setBackground(BattleshipsMainFrame.BUTTON_COLOUR);
         mainHostButton.setBorder(BorderFactory.createLineBorder(Color.BLACK, 2));
         mainHostButton.setFont(BattleshipsMainFrame.mainFont);
+        mainHostButton.addActionListener(this);
         //set constraints
-        c.ipadx = 0;
-        c.ipady = 0;
+        c.insets = new Insets(60, 0, 10, 0); //the padding around component
+        c.ipadx = 5;
+        c.ipady = 5;
         c.gridx = 0;
         c.gridy = 1;
         c.gridwidth = 1;
@@ -66,9 +65,11 @@ public class BattleshipsHostJoin extends JPanel implements ActionListener {
         mainJoinButton.setBackground(BattleshipsMainFrame.BUTTON_COLOUR);
         mainJoinButton.setBorder(BorderFactory.createLineBorder(Color.BLACK, 2));
         mainJoinButton.setFont(BattleshipsMainFrame.mainFont);
+        mainJoinButton.addActionListener(this);
         //set constraints
-        c.ipadx = 0;
-        c.ipady = 0;
+        c.insets = new Insets(60, 0, 10, 0); //the padding around component
+        c.ipadx = 5;
+        c.ipady = 5;
         c.gridx = 1;
         c.gridy = 1;
         c.gridwidth = 1;
@@ -80,9 +81,11 @@ public class BattleshipsHostJoin extends JPanel implements ActionListener {
         mainHelpButton.setBackground(BattleshipsMainFrame.BUTTON_COLOUR);
         mainHelpButton.setBorder(BorderFactory.createLineBorder(Color.BLACK, 2));
         mainHelpButton.setFont(BattleshipsMainFrame.mainFont);
+        mainHelpButton.addActionListener(this);
         //set constraints
-        c.ipadx = 0;
-        c.ipady = 0;
+        c.insets = new Insets(20, 0, 20, 0); //the padding around component
+        c.ipadx = 5;
+        c.ipady = 5;
         c.gridx = 0;
         c.gridy = 2;
         c.gridwidth = 2; //span 2 columns
@@ -94,8 +97,9 @@ public class BattleshipsHostJoin extends JPanel implements ActionListener {
         mainUsernameLabel.setBackground(BattleshipsMainFrame.BG_COLOUR);
         mainUsernameLabel.setFont(BattleshipsMainFrame.mainFont);
         //set constraints
-        c.ipadx = 0;
-        c.ipady = 0;
+        c.insets = new Insets(10, 0, 0, 0); //the padding around component
+        c.ipadx = 5;
+        c.ipady = 5;
         c.gridx = 0;
         c.gridy = 0;
         c.gridwidth = 1;
@@ -107,8 +111,9 @@ public class BattleshipsHostJoin extends JPanel implements ActionListener {
         mainUsernameTextField.setBorder(BorderFactory.createLineBorder(Color.BLACK, 2));
         mainUsernameTextField.setFont(BattleshipsMainFrame.mainFont);
         //set constraints
-        c.ipadx = 0;
-        c.ipady = 0;
+        c.insets = new Insets(10, 10, 0, 0); //the padding around component
+        c.ipadx = 5;
+        c.ipady = 5;
         c.gridx = 1;
         c.gridy = 0;
         c.gridwidth = 1;
@@ -128,8 +133,9 @@ public class BattleshipsHostJoin extends JPanel implements ActionListener {
         hostHeaderLabel.setBackground(BattleshipsMainFrame.BG_COLOUR);
         hostHeaderLabel.setFont(BattleshipsMainFrame.mainFont);
         //set constraints
-        c.ipadx = 0;
-        c.ipady = 0;
+        c.insets = new Insets(10, 0, 0, 0); //the padding around component
+        c.ipadx = 5;
+        c.ipady = 5;
         c.gridx = 0;
         c.gridy = 0;
         c.gridwidth = 2;
@@ -141,8 +147,9 @@ public class BattleshipsHostJoin extends JPanel implements ActionListener {
         hostPortLabel.setBackground(BattleshipsMainFrame.BG_COLOUR);
         hostPortLabel.setFont(BattleshipsMainFrame.mainFont);
         //set constraints
-        c.ipadx = 0;
-        c.ipady = 0;
+        c.insets = new Insets(40, 0, 0, 0); //the padding around component
+        c.ipadx = 5;
+        c.ipady = 5;
         c.gridx = 0;
         c.gridy = 1;
         c.gridwidth = 1;
@@ -154,8 +161,9 @@ public class BattleshipsHostJoin extends JPanel implements ActionListener {
         hostPortTextField.setBorder(BorderFactory.createLineBorder(Color.BLACK, 2));
         hostPortTextField.setFont(BattleshipsMainFrame.mainFont);
         //set constraints
-        c.ipadx = 0;
-        c.ipady = 0;
+        c.insets = new Insets(40, 10, 0, 0); //the padding around component
+        c.ipadx = 5;
+        c.ipady = 5;
         c.gridx = 1;
         c.gridy = 1;
         c.gridwidth = 1;
@@ -167,9 +175,11 @@ public class BattleshipsHostJoin extends JPanel implements ActionListener {
         hostHostButton.setBackground(BattleshipsMainFrame.BUTTON_COLOUR);
         hostHostButton.setBorder(BorderFactory.createLineBorder(Color.BLACK, 2));
         hostHostButton.setFont(BattleshipsMainFrame.mainFont);
+        hostHostButton.addActionListener(this);
         //set constraints
-        c.ipadx = 0;
-        c.ipady = 0;
+        c.insets = new Insets(40, 0, 0, 0); //the padding around component
+        c.ipadx = 5;
+        c.ipady = 5;
         c.gridx = 0;
         c.gridy = 2;
         c.gridwidth = 2;
@@ -189,8 +199,9 @@ public class BattleshipsHostJoin extends JPanel implements ActionListener {
         joinHeaderLabel.setBackground(BattleshipsMainFrame.BG_COLOUR);
         joinHeaderLabel.setFont(BattleshipsMainFrame.mainFont);
         //set constraints
-        c.ipadx = 0;
-        c.ipady = 0;
+        c.insets = new Insets(10, 0, 0, 0); //the padding around component
+        c.ipadx = 5;
+        c.ipady = 5;
         c.gridx = 0;
         c.gridy = 0;
         c.gridwidth = 2;
@@ -202,8 +213,9 @@ public class BattleshipsHostJoin extends JPanel implements ActionListener {
         joinHostLabel.setBackground(BattleshipsMainFrame.BG_COLOUR);
         joinHostLabel.setFont(BattleshipsMainFrame.mainFont);
         //set constraints
-        c.ipadx = 0;
-        c.ipady = 0;
+        c.insets = new Insets(20, 0, 0, 0); //the padding around component
+        c.ipadx = 5;
+        c.ipady = 5;
         c.gridx = 0;
         c.gridy = 1;
         c.gridwidth = 1;
@@ -215,8 +227,9 @@ public class BattleshipsHostJoin extends JPanel implements ActionListener {
         joinHostTextField.setBorder(BorderFactory.createLineBorder(Color.BLACK, 2));
         joinHostTextField.setFont(BattleshipsMainFrame.mainFont);
         //set constraints
-        c.ipadx = 0;
-        c.ipady = 0;
+        c.insets = new Insets(20, 10, 0, 0); //the padding around component
+        c.ipadx = 5;
+        c.ipady = 5;
         c.gridx = 1;
         c.gridy = 1;
         c.gridwidth = 1;
@@ -224,12 +237,13 @@ public class BattleshipsHostJoin extends JPanel implements ActionListener {
         joinPanel.add(joinHostTextField, c);
         
         //joinPortLabel
-        joinPortLabel = new JLabel("Address");
+        joinPortLabel = new JLabel("Port");
         joinPortLabel.setBackground(BattleshipsMainFrame.BG_COLOUR);
         joinPortLabel.setFont(BattleshipsMainFrame.mainFont);
         //set constraints
-        c.ipadx = 0;
-        c.ipady = 0;
+        c.insets = new Insets(20, 10, 0, 0); //the padding around component
+        c.ipadx = 5;
+        c.ipady = 5;
         c.gridx = 0;
         c.gridy = 2;
         c.gridwidth = 1;
@@ -241,8 +255,9 @@ public class BattleshipsHostJoin extends JPanel implements ActionListener {
         joinPortTextField.setBorder(BorderFactory.createLineBorder(Color.BLACK, 2));
         joinPortTextField.setFont(BattleshipsMainFrame.mainFont);
         //set constraints
-        c.ipadx = 0;
-        c.ipady = 0;
+        c.insets = new Insets(20, 0, 0, 0); //the padding around component
+        c.ipadx = 5;
+        c.ipady = 5;
         c.gridx = 1;
         c.gridy = 2;
         c.gridwidth = 1;
@@ -254,9 +269,11 @@ public class BattleshipsHostJoin extends JPanel implements ActionListener {
         joinJoinButton.setBackground(BattleshipsMainFrame.BUTTON_COLOUR);
         joinJoinButton.setBorder(BorderFactory.createLineBorder(Color.BLACK, 2));
         joinJoinButton.setFont(BattleshipsMainFrame.mainFont);
+        joinJoinButton.addActionListener(this);
         //set constraints
-        c.ipadx = 0;
-        c.ipady = 0;
+        c.insets = new Insets(30, 10, 0, 0); //the padding around component
+        c.ipadx = 5;
+        c.ipady = 5;
         c.gridx = 0;
         c.gridy = 3;
         c.gridwidth = 2;
@@ -265,22 +282,71 @@ public class BattleshipsHostJoin extends JPanel implements ActionListener {
         
         setBackground(BattleshipsMainFrame.BG_COLOUR); //set the bg colour
         add(mainPanel);
-        currentPanel = mainPanel; //set the current selected panel to the mainPanel
     }
     
     //open the host a game screen
     private void openHost() {
-        
+        removeAll();
+        add(hostPanel);
+        validate();
+        repaint();
     }
     
     //open the join a game screen
     private void openJoin() {
-        
+        removeAll();
+        add(joinPanel);
+        validate();
+        repaint();
     }
     
     //open help dialog
     private void openHelp() {
+        final JFrame helpFrame = new JFrame(); //needs to be declared final for action listener to work
+        helpFrame.setBackground(BattleshipsMainFrame.BG_COLOUR);
         
+        JPanel panel = new JPanel();
+        panel.setBackground(BattleshipsMainFrame.BG_COLOUR);
+        
+        JButton button = new JButton("Close");
+        button.setBackground(BattleshipsMainFrame.BUTTON_COLOUR);
+        button.setBorder(BorderFactory.createLineBorder(Color.BLACK, 2));
+        button.setFont(BattleshipsMainFrame.mainFont);
+        button.addActionListener(new ActionListener() { //action listener
+            public void actionPerformed(ActionEvent e) {
+                helpFrame.dispose(); //close the helpFrame
+            }
+        });
+        
+        JTextArea textArea = new JTextArea();
+        textArea.setFont(BattleshipsMainFrame.smallFont);
+        
+        try {
+            BufferedReader reader = new BufferedReader(new FileReader("assets/help.txt"));
+            String line = reader.readLine();
+            
+            while (line != null) { //while the line is not blank
+                textArea.append(line + "\n"); //add to text area
+                line = reader.readLine();
+            }
+            
+            reader.close(); //close the file
+            textArea.setEditable(false); //stop the user from being able to change text
+        } catch(Exception e) {
+            e.printStackTrace();
+        }
+                
+        JScrollPane scrollPane = new JScrollPane(textArea, JScrollPane.VERTICAL_SCROLLBAR_ALWAYS, JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
+        scrollPane.setPreferredSize(new Dimension(550, 350));
+        
+        panel.add(scrollPane);
+        panel.add(button);
+        
+        helpFrame.add(panel);
+        helpFrame.setSize(600, 400);
+        helpFrame.setResizable(false);
+        helpFrame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE); //dispose instead of exit so the other one doesnt close
+        helpFrame.setVisible(true);
     }
     
     //host
