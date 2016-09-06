@@ -11,7 +11,7 @@ public class BattleshipsMainFrame {
     public static void main(String[] args) {
         JFrame frame = new JFrame("Battleships!");
         frame.setBackground(BG_COLOUR);
-        frame.setSize(300, 300);
+        frame.setSize(300, 250);
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.setResizable(false);
         frame.add(new BattleshipsHostJoin());
