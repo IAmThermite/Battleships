@@ -2,10 +2,6 @@
 
 ## TO DO
   * BattleshipsHostJoin.java
-    * Re-order components so they are in the correct places
-    * Add padding to components
-  
-  * BattleshipsMainFrame
-    * Make the main frame a `public static` variable?
+    * Make the game hostable/joinable (i.e validate networking)
   
   * Every other file needs doing 
