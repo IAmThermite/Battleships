@@ -356,7 +356,7 @@ public class BattleshipsHostJoin extends JPanel implements ActionListener {
         if(testHost()) {
             //start main game
             setUsername(true); //set the username
-            System.out.println("sucess " + username);
+            System.out.println("success " + username);
             BattleshipsMainFrame.frame.dispose();
             BattleshipsSetupShips s = new BattleshipsSetupShips();
         } else {
@@ -368,7 +368,7 @@ public class BattleshipsHostJoin extends JPanel implements ActionListener {
         if(testJoin()) {
             //start main game
             setUsername(false); //set the username
-            System.out.println("sucess " + username);
+            System.out.println("success " + username);
             BattleshipsMainFrame.frame.dispose();
         } else {
             System.out.println("fail " + username);
@@ -450,7 +450,7 @@ public class BattleshipsHostJoin extends JPanel implements ActionListener {
     
     private void setUsername(boolean isHost) {
         username = mainUsernameTextField.getText();
-        if(username == null) {
+        if(username == null || username.equals("")) {
             if(isHost) {
                 username = "Host";
             } else {
