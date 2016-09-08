@@ -2,9 +2,10 @@
 
 ## TO DO
   * BattleshipsSetupShips.java
-   * Make the layout
-   * Create the main field panel
    * Add number of ships label
-   * Complete anything else I missed
+   * Finish logic for overlapping ships
+   * Get stakeholder feedback
+   * method to find all the squares that have ships on them
+     * Maybe remove individual ships ArrayLists and just have one?
   
   * Every other file needs doing 
