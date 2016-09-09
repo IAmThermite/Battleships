@@ -47,21 +47,21 @@ public class BattleshipsSetupShips extends JFrame implements ActionListener {
     private String currentLocation = "A1";
     private String[] letters = {"A", "B", "C", "D", "E", "F", "G", "H", "I", "J"};
     
-    private boolean subSet = false;
+    private boolean aircraftSet = false;
+    private boolean battleshipSet = false;
+    private boolean submarineSet = false;
+    private boolean destroyerSet = false;
+    private boolean minesweeperSet = false;
     
     private int shipsPlaced = 0; //number of ships placed
     
     private JLabel selectedLabel = new JLabel(currentLocation);
     private JLabel directionLabel = new JLabel(currentDirection);
+    private JLabel numberSetLabel = new JLabel("Ships set: " + shipsPlaced + "/5");
     
     private ArrayList<BattleshipsSetupShipsPanel> setupPanelList = new ArrayList<BattleshipsSetupShipsPanel>();
     
     public BattleshipsSetupShips() {
-        selectedLabel.setFont(BattleshipsMainFrame.mainFont);
-        selectedLabel.setBackground(BattleshipsMainFrame.BG_COLOUR);
-        directionLabel.setFont(BattleshipsMainFrame.mainFont);
-        directionLabel.setBackground(BattleshipsMainFrame.BG_COLOUR);
-        
         setTitle("Place Your Ships!");
         setBackground(BattleshipsMainFrame.BG_COLOUR);
         setSize(1000, 550);
@@ -69,13 +69,23 @@ public class BattleshipsSetupShips extends JFrame implements ActionListener {
         setResizable(false);
         setLayout(new GridLayout(1, 2));
         
+        
+        selectedLabel.setFont(BattleshipsMainFrame.mainFont);
+        selectedLabel.setBackground(BattleshipsMainFrame.BG_COLOUR);
+        
+        directionLabel.setFont(BattleshipsMainFrame.mainFont);
+        directionLabel.setBackground(BattleshipsMainFrame.BG_COLOUR);
+        
+        numberSetLabel.setFont(BattleshipsMainFrame.mainFont);
+        numberSetLabel.setBackground(BattleshipsMainFrame.BG_COLOUR);
+               
+        
         GridBagLayout panelLayout = new GridBagLayout();
         GridBagConstraints c = new GridBagConstraints();
         
         actionPanel = new JPanel();
         actionPanel.setBackground(BattleshipsMainFrame.BG_COLOUR);
         actionPanel.setLayout(panelLayout);
-        
         
         
         //
@@ -109,11 +119,24 @@ public class BattleshipsSetupShips extends JFrame implements ActionListener {
         c.insets = new Insets(25, 5, 5, 5); //the padding around component
         c.ipadx = 5;
         c.ipady = 5;
-        c.gridx = 0;
+        c.gridx = 1;
         c.gridy = 4;
-        c.gridwidth = 3;
+        c.gridwidth = 2;
         //finally add
         actionPanel.add(doneButton, c);
+        
+        
+        //
+        //number set label
+        //
+        c.insets = new Insets(25, 5, 5, 5); //the padding around the component
+        c.ipadx = 5;
+        c.ipady = 5;
+        c.gridx = 0;
+        c.gridy = 4;
+        c.gridwidth = 1;
+        //finally add
+        actionPanel.add(numberSetLabel, c);
         
         
         //
@@ -281,151 +304,143 @@ public class BattleshipsSetupShips extends JFrame implements ActionListener {
     }
 
 
-    //subclass
-    private class BattleshipsSetupShipsPanel extends JPanel implements MouseListener {
-        private String name;
-        private boolean hasShip;
-        
-        public BattleshipsSetupShipsPanel(String name) {
-            this.name = name;
-            
-            setBackground(BattleshipsMainFrame.NORMAL_COLOUR);
-            setPreferredSize(new Dimension(15, 15));
-            addMouseListener(this);
-            setBorder(BorderFactory.createLineBorder(Color.BLACK));
-        }
-        
-        public String getName() {
-            return name;
-        }
-        
-        
-        public void mouseClicked(MouseEvent e) {
-            currentLocation = name;
-            selectedLabel.setText(name);
-        }
-        
-        public void setShip() {
-            hasShip = true;
-            setBackground(BattleshipsMainFrame.SHIP_COLOUR);
-        }
-        
-        public void mousePressed(MouseEvent e) {}
-        
-        public void mouseReleased(MouseEvent e) {}
-        
-        public void mouseEntered(MouseEvent e) {
-            if(!hasShip) {
-                setBackground(BattleshipsMainFrame.HOVER_COLOUR);
-            }
-        }
-        
-        public void mouseExited(MouseEvent e) {
-            if(!hasShip) {
-                setBackground(BattleshipsMainFrame.NORMAL_COLOUR);
-            }
-        }
-    }
-    
-    private class Ship {
-        private String location;
-        private int size;
-        private String direction;
-        
-        private int number;
-        private char[] brokenName;
-        private char letter;
-        private int letterIndex;
-    
-        public Ship(String location, int size, String direction) {
-            this.location = location;
-            this.size = size;
-            this.direction = direction;
-            
-            brokenName = location.toCharArray(); //convert the location to a char array
-            
-            letter = brokenName[0]; //the letter location
-            
-            //set the number
-            if(brokenName.length == 2) {
-                number = Integer.parseInt(String.valueOf(brokenName[1]));
-            } else {
-                char[] nums = {brokenName[1], brokenName[2]};
-                String s = new String(nums);
-                number = Integer.parseInt(s);
-            }
-            
-            letterIndex = 0;
-            //get the current letter index from array
-            for(int i = 0; i<letters.length; i++) {
-                if(letters[i].equals(String.valueOf(letter))) {
-                    letterIndex = i;
-                }
-            }
-           
-            //set the ship on the first location
-            for(int i = 0; i< setupPanelList.size(); i++) {
-                if(setupPanelList.get(i).getName().equals(location)) {
-                    setupPanelList.get(i).setShip(); //put the ship on the board
-                    setOtherPanels();
-                }
-            }
-        }
-        
-        private void setOtherPanels() {
-            //if the ship is down we need to find the next letter and place ships on the squares under it depending on the length
-            if(direction.equals("Down")) {
-                for(int i = 0; i<size;i++) {
-                    String nextLetter = letters[letterIndex+1];
-                    String nextLocation = new String(nextLetter + String.valueOf(number));
-                    
-                    for(int x = 0; x<setupPanelList.size(); x++) {
-                        if(setupPanelList.get(x).getName().equals(nextLocation)) { //we found the next ship
-                            setupPanelList.get(x).setShip();
-                            
-                            nextLetter = letters[letterIndex+i];
-                            nextLocation = new String(nextLetter + String.valueOf(number));
-                        }
-                    }
-                }
-            } else if(direction.equals("Right")) {
-                for(int i = 0; i<size; i++) {
-                    String nextLocation = new String(letter + String.valueOf(number+i));
-                    for(int x = 0; x<setupPanelList.size(); x++) {
-                        if(setupPanelList.get(x).getName().equals(nextLocation)) {
-                            setupPanelList.get(x).setShip();
-                        }
-                    }
-                }
-            }
-        }
-    }
-    
+    //initialise the ships variables
     private void setShip(int size) {
-        if(validate(size)) {
-            System.out.println("success");
-            
+        if(validate(size)) {            
             if(size == AIRCRAFT_LENGTH) {
-                aircraftShip = new Ship(currentLocation, AIRCRAFT_LENGTH, currentDirection);
+                if(!aircraftSet) {
+                    aircraftShip = new Ship(currentLocation, AIRCRAFT_LENGTH, currentDirection);
+                    aircraftLocations = aircraftShip.getLocations();
+                    
+                    if(aircraftShip.getSet()) { //check to see if the ship is validated correctly
+                        aircraftSet = true;
+                    } else { //unset the variables if failed
+                        aircraftShip = null;
+                        aircraftLocations = null;
+                    }
+                } else {
+                    JOptionPane.showMessageDialog(this, "You have already set this ship! Add another or press done to continue!", "Ship Already Set!", JOptionPane.ERROR_MESSAGE);
+                }
             } else if(size == BATTLESHIP_LENGTH) {
-                battleshipShip = new Ship(currentLocation, BATTLESHIP_LENGTH, currentDirection);
+                if(!battleshipSet) {
+                    battleshipShip = new Ship(currentLocation, BATTLESHIP_LENGTH, currentDirection);
+                    battleshipLocations = battleshipShip.getLocations();
+                    
+                    if(battleshipShip.getSet()) { //check to see if the ship is validated correctly
+                        battleshipSet = true;
+                    } else { //unset the variables if failed
+                        battleshipShip = null;
+                        battleshipLocations = null;
+                    }
+                } else {
+                    JOptionPane.showMessageDialog(this, "You have already set this ship! Add another or press done to continue!", "Ship Already Set!", JOptionPane.ERROR_MESSAGE);
+                }
             } else if(size == SUBMARINE_LENGTH) {
-                if(subSet) { //if the sub has been set the set the destroyer
-                    destroyerShip = new Ship(currentLocation, DESTROYER_LENGTH, currentDirection);
+                if(submarineSet) { //if the sub has been set then set the destroyer
+                    if(!destroyerSet) {
+                        destroyerShip = new Ship(currentLocation, DESTROYER_LENGTH, currentDirection);
+                        destroyerLocations = destroyerShip.getLocations();
+                        
+                        if(destroyerShip.getSet()) { //check to see if the ship is validated correctly
+                            destroyerSet = true;
+                        } else { //unset the variables if failed
+                            destroyerShip = null;
+                            destroyerLocations = null;
+                        }
+                    } else {
+                        JOptionPane.showMessageDialog(this, "You have already set this ship! Add another or press done to continue!", "Ship Already Set!", JOptionPane.ERROR_MESSAGE);
+                    }
+                } else if(submarineSet && destroyerSet) {
+                    JOptionPane.showMessageDialog(this, "You have already set this ship! Add another or press done to continue!", "Ship Already Set!", JOptionPane.ERROR_MESSAGE);
                 } else {
                     submarineShip = new Ship(currentLocation, SUBMARINE_LENGTH, currentDirection);
-                    subSet = true;
+                    submarineLocations = submarineShip.getLocations();
+                    
+                    if(submarineShip.getSet()) { //check to see if the ship is validated correctly
+                        submarineSet = true;
+                    } else { //unset the variables if failed
+                        submarineShip = null;
+                        submarineLocations = null;
+                    }
                 }
             
             } else if(size == MINESWEEPER_LENGTH) {
-                minesweeperShip = new Ship(currentLocation, MINESWEEPER_LENGTH, currentDirection);
+                if(!minesweeperSet) {
+                    minesweeperShip = new Ship(currentLocation, MINESWEEPER_LENGTH, currentDirection);
+                    minesweeperLocations = minesweeperShip.getLocations();
+                    
+                    if(minesweeperShip.getSet()) { //check to see if the ship is validated correctly
+                        minesweeperSet = true;
+                    } else { //unset the variables if failed
+                        minesweeperShip = null;
+                        minesweeperLocations = null;
+                    }
+                } else {
+                    JOptionPane.showMessageDialog(this, "You have already set this ship! Add another or press done to continue!", "Ship Already Set!", JOptionPane.ERROR_MESSAGE);
+                }
             }
         }
     }
     
-    //checks to see if the ship will not overlap
-    private boolean checkSquares() {
-        return false;
+    //checks to see if the ship will not overlap. need to try-catch for incase null pointer exception
+    private boolean checkSquares(ArrayList<String> list) {
+        try {
+            //check aircraft carrier
+            for(int i = 0; i<aircraftLocations.size(); i++) {
+                for(int x = 0; x<list.size(); x++) {
+                    if(list.get(x).equals(aircraftLocations.get(i))) {
+                        return false;
+                    }
+                }
+            }
+        } catch(Exception e) {} //ignore null pointer exception
+        
+        try {
+            //check battleship
+            for(int i = 0; i<battleshipLocations.size(); i++) {
+                for(int x = 0; x<list.size(); x++) {
+                    if(list.get(x).equals(battleshipLocations.get(i))) {
+                        return false;
+                    }
+                }
+            }
+        } catch(Exception e) {} //ignore null pointer exception
+        
+        try {
+            //check submarine
+            for(int i = 0; i<submarineLocations.size(); i++) {
+                for(int x = 0; x<list.size(); x++) {
+                    if(list.get(x).equals(submarineLocations.get(i))) {
+                        return false;
+                    }
+                }
+            }
+        } catch(Exception e) {} //ignore null pointer exception
+        
+        try {
+            //check destroyer
+            for(int i = 0; i<destroyerLocations.size(); i++) {
+                for(int x = 0; x<list.size(); x++) {
+                    if(list.get(x).equals(destroyerLocations.get(i))) {
+                        return false;
+                    }
+                }
+            }
+        } catch(Exception e) {} //ignore null pointer exception
+        
+        try {
+            //check minesweeper
+            for(int i = 0; i<minesweeperLocations.size(); i++) {
+                for(int x = 0; x<list.size(); x++) {
+                    if(list.get(x).equals(minesweeperLocations.get(i))) {
+                        return false;
+                    }
+                }
+            }
+        } catch(Exception e) {} //ignore null pointer exception
+        
+        //will only come to this if no square is duplicate as it will break at return
+        return true;
     }
     
     //checks to see if the ship will fit
@@ -475,6 +490,151 @@ public class BattleshipsSetupShips extends JFrame implements ActionListener {
         return false; //it needs it annoyingly however it shouldnt happen
     }
     
+    
+    //change the label
+    private void updateNumberToPlace() {
+        shipsPlaced++;
+        numberSetLabel.setText("Ships set: " + shipsPlaced + "/5");
+    }
+    
+    //subclass
+    private class BattleshipsSetupShipsPanel extends JPanel implements MouseListener {
+        private String name;
+        private boolean hasShip;
+        
+        public BattleshipsSetupShipsPanel(String name) {
+            this.name = name;
+            
+            setBackground(BattleshipsMainFrame.NORMAL_COLOUR);
+            setPreferredSize(new Dimension(15, 15));
+            addMouseListener(this);
+            setBorder(BorderFactory.createLineBorder(Color.BLACK));
+        }
+        
+        public String getName() {
+            return name;
+        }
+        
+        public void setShip() {
+            hasShip = true;
+            setBackground(BattleshipsMainFrame.SHIP_COLOUR);
+        }
+        
+        public void mouseClicked(MouseEvent e) {
+            currentLocation = name;
+            selectedLabel.setText(name);
+        }
+        
+        public void mousePressed(MouseEvent e) {}
+        
+        public void mouseReleased(MouseEvent e) {}
+        
+        public void mouseEntered(MouseEvent e) {
+            if(!hasShip) {
+                setBackground(BattleshipsMainFrame.HOVER_COLOUR);
+            }
+        }
+        
+        public void mouseExited(MouseEvent e) {
+            if(!hasShip) {
+                setBackground(BattleshipsMainFrame.NORMAL_COLOUR);
+            }
+        }
+    }
+    
+    //subclass
+    private class Ship {
+        private ArrayList<String> listOfFieldNames= new ArrayList<String>();
+        
+        private boolean isSet = false;
+        
+        private String location;
+        private int size;
+        private String direction;
+        
+        private int number;
+        private char[] brokenName;
+        private char letter;
+        private int letterIndex;
+    
+        public Ship(String location, int size, String direction) {
+            this.location = location;
+            this.size = size;
+            this.direction = direction;
+            
+            brokenName = location.toCharArray(); //convert the location to a char array
+            
+            letter = brokenName[0]; //the letter location
+            
+            //set the number
+            if(brokenName.length == 2) {
+                number = Integer.parseInt(String.valueOf(brokenName[1]));
+            } else {
+                char[] nums = {brokenName[1], brokenName[2]};
+                String s = new String(nums);
+                number = Integer.parseInt(s);
+            }
+            
+            letterIndex = 0;
+            //get the current letter index from array
+            for(int i = 0; i<letters.length; i++) {
+                if(letters[i].equals(String.valueOf(letter))) {
+                    letterIndex = i;
+                }
+            }
+            
+            setOtherPanels(); //set the other panel names
+            
+            if(checkSquares(listOfFieldNames)) {
+                finaliseOtherPanels();
+                isSet = true;
+            } else {
+                JOptionPane.showMessageDialog(actionPanel, "The ships will overlap! Please choose another location or direction!", "Invalid Location!", JOptionPane.ERROR_MESSAGE);
+            }
+        }
+        
+        private void setOtherPanels() {
+            //if the ship is down we need to find the next letter and place ships on the squares under it depending on the length
+            if(direction.equals("Down")) {
+                for(int i = 0; i<size;i++) {
+                    String nextLetter = letters[letterIndex+i];
+                    String nextLocation = new String(nextLetter + String.valueOf(number));
+                    
+                    listOfFieldNames.add(nextLocation);
+                    
+                }
+            } else if(direction.equals("Right")) {
+                for(int i = 0; i<size; i++) {
+                    String nextLocation = new String(letter + String.valueOf(number+i));
+                    
+                    listOfFieldNames.add(nextLocation);
+                    
+                }
+            }
+        }
+        
+        //call when we have check that it does not overlap
+        public void finaliseOtherPanels() {
+            updateNumberToPlace();
+            for(int i = 0; i<listOfFieldNames.size(); i++) {
+                for(int x = 0; x<setupPanelList.size(); x++) {
+                    if(setupPanelList.get(x).getName().equals(listOfFieldNames.get(i))) {
+                        setupPanelList.get(x).setShip();
+                    }
+                }
+            }
+        }
+        
+        public boolean getSet() {
+            return isSet;
+        }
+        
+        public ArrayList<String> getLocations() {
+            return listOfFieldNames;
+        }
+    }
+    
+    
     public void actionPerformed(ActionEvent e) {
         String location = selectedLabel.getText();
         String direction = directionLabel.getText();
@@ -489,26 +649,25 @@ public class BattleshipsSetupShips extends JFrame implements ActionListener {
             directionLabel.setText(currentDirection);
             
         } else if(e.getSource() == doneButton) {
-            System.out.println("done");
+            if(shipsPlaced == 5) {
+                System.out.println("done");
+            } else {
+                JOptionPane.showMessageDialog(actionPanel, "You still have " + (5-shipsPlaced) + " Ships to place!", "Not done yet!", JOptionPane.ERROR_MESSAGE);
+            }
             
         } else if(e.getSource() == aircraftButton) {
-            System.out.println("aircraft");
             setShip(AIRCRAFT_LENGTH);
             
         } else if(e.getSource() == battleshipButton) {
-            System.out.println("battleship");
             setShip(BATTLESHIP_LENGTH);
             
         } else if(e.getSource() == submarineButton) {
-            System.out.println("submarine");
             setShip(SUBMARINE_LENGTH);
             
         } else if(e.getSource() == destroyerButton) {
-            System.out.println("destroyer");
             setShip(DESTROYER_LENGTH);
             
         } else if(e.getSource() == minesweeperButton) {
-            System.out.println("minesweeper");
             setShip(MINESWEEPER_LENGTH);
             
         }
