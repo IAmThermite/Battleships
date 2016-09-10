@@ -1,3 +1,8 @@
+/*
+* This is the main class. It opens a jframe with the main menu panel.
+* It also contains all the global final variables.
+*/
+
 import javax.swing.*;
 import java.awt.*;
 
@@ -13,9 +18,9 @@ public class BattleshipsMainFrame {
     public static final Color HOVER_COLOUR = new Color(0, 125, 125);
     public static final Color SHIP_COLOUR = Color.BLACK;
     
-    public static Font mainFont = new Font("Verdana", Font.PLAIN, 24);
-    public static Font smallFont = new Font("Verdana", Font.PLAIN, 14);
-    public static Font mediumFont = new Font("Verdana", Font.PLAIN, 18);
+    public static final Font MAIN_FONT = new Font("Verdana", Font.PLAIN, 24);
+    public static final Font SMALL_FONT = new Font("Verdana", Font.PLAIN, 14);
+    public static final Font MEDIUM_FONT = new Font("Verdana", Font.PLAIN, 18);
     
     public static JFrame frame = new JFrame("Battleships!");
     
