@@ -1,14 +1,16 @@
 #### HOW TO PLAY ####
-1. This menu is simple to operate
+1. Host a game
     If you want to make a new game you need to know your LAN IP address
     To find this open up the console and type 'ipconfig'
     Choose a port number (1024-65535)
     Give the port number and IP address (hostname) to your friend
     Click 'Host'
-    
+
+2. Join a game
     If your friend has made a game then you need to get the hostname and port
     Click 'Join'
-    
+
+3. Play the game    
     You should then see a grid.
     Click on a square and then the ship button to place
     Click 'Change Direction' to swap the orientation
