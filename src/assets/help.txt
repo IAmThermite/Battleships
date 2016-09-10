@@ -1,27 +1,25 @@
-THIS IS THE HELP FILE!
-
-Lots of stuff here!
-
-12345678 90098 7654321
-aaaassssd dddfff fgggg
-
-
-
-hhhh hhhhh
-  
-hhhs
-
-scd
-as
-da
-sf
-a
-fa
-f
-as
-fa
-f
-af
-a
-sf
-as
+#### HOW TO PLAY ####
+1. This menu is simple to operate
+    If you want to make a new game you need to know your LAN IP address
+    To find this open up the console and type 'ipconfig'
+    Choose a port number (1024-65535)
+    Give the port number and IP address (hostname) to your friend
+    Click 'Host'
+    
+    If your friend has made a game then you need to get the hostname and port
+    Click 'Join'
+    
+    You should then see a grid.
+    Click on a square and then the ship button to place
+    Click 'Change Direction' to swap the orientation
+    Once you have placed all ships click 'Done'
+    
+    You should now see a new screen with two fields similar to the last
+    When it is your turn you will be notified in the log on the top right
+    Click on a loctation on the bottom screen and click 'FIRE!'
+    If you hit your opponents ship you get another go
+    If you miss it will be your opponents turn
+    
+    First person to destroy all ships wins!
+    
+~~~ Made by Luke Honiss 2016 (c)~~~
