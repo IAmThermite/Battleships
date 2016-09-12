@@ -35,6 +35,10 @@ public class BattleshipsGameMainPanel extends JPanel implements MouseListener {
     public String getName() {
         return name;
     }
+    //returns isPlayer
+    public boolean getIsPlayer() {
+        return isPlayer;
+    }
     
     //called when the user fires on that panel
     public void setHit() {
@@ -53,9 +57,7 @@ public class BattleshipsGameMainPanel extends JPanel implements MouseListener {
     
     //mouse listeners
     public void mouseClicked(MouseEvent e) {
-        if(isPlayer) {
-            JOptionPane.showMessageDialog(this, "You cant fire at your own square! Please choose a location on the other grid!", "Invalid Location!", JOptionPane.ERROR_MESSAGE);
-        } else {
+        if(!isPlayer) {
             BattleshipsGamePanel.controlLocationLabel.setText(name);
         }
     }
@@ -64,13 +66,13 @@ public class BattleshipsGameMainPanel extends JPanel implements MouseListener {
     public void mouseReleased(MouseEvent e) {}
     
     public void mouseEntered(MouseEvent e) {
-        if(!isHit) {
+        if(!isHit && !isPlayer) {
             setBackground(BattleshipsMainFrame.HOVER_COLOUR);
         }
     }
     
     public void mouseExited(MouseEvent e) {
-        if(!isHit) {
+        if(!isHit && !isPlayer) {
             setBackground(BattleshipsMainFrame.NORMAL_COLOUR);
         }
     }
