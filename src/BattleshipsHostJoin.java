@@ -37,9 +37,13 @@ public class BattleshipsHostJoin extends JPanel implements ActionListener {
     
     private JFrame helpFrame;
     
+    //for networking
     public static String username;
     public static String hostname;
     public static int port;
+    
+    public static ServerSocket server;
+    public static Socket connection;
     
     //constructor
     public BattleshipsHostJoin() {
@@ -373,6 +377,7 @@ public class BattleshipsHostJoin extends JPanel implements ActionListener {
             //start main game
             setUsername(false); //set the username
             BattleshipsMainFrame.frame.dispose();
+            BattleshipsSetupShips s = new BattleshipsSetupShips();
         } else {
             System.out.println("fail " + username);
         }
@@ -380,14 +385,13 @@ public class BattleshipsHostJoin extends JPanel implements ActionListener {
     
     //test host connection
     private boolean testHost() {
-        ServerSocket server;
         try { //try and make the port an int
             int portNum = Integer.parseInt(hostPortTextField.getText());
             
             if(portNum>=1024 && portNum <=65535) { //ports less than 1024 are reserved. 65535 is the max port
                 try { //attempt to make a new server socket
                     server = new ServerSocket(portNum);
-                    server.close();
+                    connection = server.accept();
                     
                     return true;
                 } catch(Exception e) {
@@ -414,17 +418,15 @@ public class BattleshipsHostJoin extends JPanel implements ActionListener {
     
     //test join connection
     private boolean testJoin() {
-        Socket serverSocket;
         hostname = joinHostTextField.getText();
         
         String[] parts = hostname.split( "\\." ); //split the hostname into parts. a valid ip will have 4 parts
         
-        if(parts.length == 4) {
+        if(parts.length == 4 || hostname.equals("localhost")) {
             try {
                 port = Integer.parseInt(joinPortTextField.getText());
                 try { //try to connect to a server
-                    serverSocket = new Socket(hostname, port);
-                    serverSocket.close();
+                    connection = new Socket(hostname, port);
                     
                     return true;
                 } catch(Exception e) {
