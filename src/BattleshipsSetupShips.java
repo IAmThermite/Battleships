@@ -23,11 +23,11 @@ public class BattleshipsSetupShips extends JFrame implements ActionListener {
     private final int MINESWEEPER_LENGTH = 2;
     
     //stores the locations of the ships
-    private ArrayList<String> aircraftLocations;
-    private ArrayList<String> battleshipLocations;
-    private ArrayList<String> submarineLocations;
-    private ArrayList<String> destroyerLocations;
-    private ArrayList<String> minesweeperLocations;
+    public static ArrayList<String> aircraftLocations;
+    public static ArrayList<String> battleshipLocations;
+    public static ArrayList<String> submarineLocations;
+    public static ArrayList<String> destroyerLocations;
+    public static ArrayList<String> minesweeperLocations;
     
     private Ship aircraftShip;
     private Ship battleshipShip;
@@ -58,9 +58,9 @@ public class BattleshipsSetupShips extends JFrame implements ActionListener {
     
     private int shipsPlaced = 0; //number of ships placed
     
-    private JLabel selectedLabel = new JLabel(currentLocation);
-    private JLabel directionLabel = new JLabel(currentDirection);
-    private JLabel numberSetLabel = new JLabel("Ships set: " + shipsPlaced + "/5");
+    private JLabel selectedLabel = new JLabel(currentLocation, JLabel.CENTER);
+    private JLabel directionLabel = new JLabel(currentDirection, JLabel.CENTER);
+    private JLabel numberSetLabel = new JLabel("Ships set: " + shipsPlaced + "/5", JLabel.CENTER);
     
     private ArrayList<BattleshipsSetupShipsPanel> setupPanelList = new ArrayList<BattleshipsSetupShipsPanel>();
     
@@ -273,9 +273,10 @@ public class BattleshipsSetupShips extends JFrame implements ActionListener {
         
         //add number labels
         for(int i = 0; i<10; i++) {
-            JLabel l = new JLabel(Integer.toString(i+1));
+            JLabel l = new JLabel(Integer.toString(i+1), JLabel.CENTER);
             l.setFont(BattleshipsMainFrame.MAIN_FONT);
             l.setForeground(Color.WHITE);
+            
             fieldPanel.add(l);
         }
         
@@ -283,10 +284,9 @@ public class BattleshipsSetupShips extends JFrame implements ActionListener {
         for(int i = 0; i<10; i++) {
             String letter = letters[i];
             
-            JLabel l = new JLabel();
+            JLabel l = new JLabel(letter, JLabel.CENTER);
             l.setForeground(Color.WHITE);
-            l.setFont(BattleshipsMainFrame.MAIN_FONT);
-            l.setText(letter);
+            l.setFont(BattleshipsMainFrame.`MAIN_FONT);
             
             fieldPanel.add(l); //add letter label
             
