@@ -7,7 +7,7 @@ import javax.swing.*;
 public class BattleshipsGame extends JFrame {    
     public BattleshipsGame() {
         setBackground(BattleshipsMainFrame.BG_COLOUR);
-        setSize(800, 800);
+        setSize(720, 720);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setTitle("Battleships!");
         
