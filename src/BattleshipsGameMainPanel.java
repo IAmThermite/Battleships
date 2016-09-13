@@ -52,7 +52,9 @@ public class BattleshipsGameMainPanel extends JPanel implements MouseListener {
     //called when there is supposed to be a ship there
     public void setShip() {
         hasShip = true;
-        setBackground(BattleshipsMainFrame.SHIP_COLOUR);
+        if(isPlayer) {
+            setBackground(BattleshipsMainFrame.SHIP_COLOUR);
+        }
     }
     
     //mouse listeners
