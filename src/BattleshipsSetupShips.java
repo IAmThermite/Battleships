@@ -16,11 +16,11 @@ public class BattleshipsSetupShips extends JFrame implements ActionListener {
     private String minesweeperLocation;
     
     //lengths of each ship
-    private final int AIRCRAFT_LENGTH = 5;
-    private final int BATTLESHIP_LENGTH = 4;
-    private final int SUBMARINE_LENGTH = 3;
-    private final int DESTROYER_LENGTH = 3;
-    private final int MINESWEEPER_LENGTH = 2;
+    public final static int AIRCRAFT_LENGTH = 5;
+    public final static int BATTLESHIP_LENGTH = 4;
+    public final static int SUBMARINE_LENGTH = 3;
+    public final static int DESTROYER_LENGTH = 3;
+    public final static int MINESWEEPER_LENGTH = 2;
     
     //stores the locations of the ships
     public static ArrayList<String> aircraftLocations;
@@ -59,7 +59,7 @@ public class BattleshipsSetupShips extends JFrame implements ActionListener {
     private int shipsPlaced = 0; //number of ships placed
     
     private JLabel selectedLabel = new JLabel(currentLocation, JLabel.CENTER);
-    private JLabel directionLabel = new JLabel(currentDirection, JLabel.CENTER);
+    private JLabel directionLabel = new JLabel("Direction:\n" + currentDirection, JLabel.CENTER);
     private JLabel numberSetLabel = new JLabel("Ships set: " + shipsPlaced + "/5", JLabel.CENTER);
     
     private ArrayList<BattleshipsSetupShipsPanel> setupPanelList = new ArrayList<BattleshipsSetupShipsPanel>();
@@ -67,21 +67,11 @@ public class BattleshipsSetupShips extends JFrame implements ActionListener {
     public BattleshipsSetupShips() {
         setTitle("Place Your Ships!");
         setBackground(BattleshipsMainFrame.BG_COLOUR);
-        setSize(1000, 550);
+        setSize(1050, 550);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setResizable(false);
         setLayout(new GridLayout(1, 2));
         
-        
-        selectedLabel.setFont(BattleshipsMainFrame.MAIN_FONT);
-        selectedLabel.setBackground(BattleshipsMainFrame.BG_COLOUR);
-        
-        directionLabel.setFont(BattleshipsMainFrame.MAIN_FONT);
-        directionLabel.setBackground(BattleshipsMainFrame.BG_COLOUR);
-        
-        numberSetLabel.setFont(BattleshipsMainFrame.MAIN_FONT);
-        numberSetLabel.setBackground(BattleshipsMainFrame.BG_COLOUR);
-               
         
         GridBagLayout panelLayout = new GridBagLayout();
         GridBagConstraints c = new GridBagConstraints();
@@ -96,16 +86,17 @@ public class BattleshipsSetupShips extends JFrame implements ActionListener {
         //
         directionButton = new JButton("Swap Direction");
         directionButton.setBackground(BattleshipsMainFrame.BUTTON_COLOUR);
-        directionButton.setFont(BattleshipsMainFrame.MEDIUM_FONT);
+        directionButton.setForeground(Color.BLACK);
+        directionButton.setFont(BattleshipsMainFrame.MAIN_FONT);
         directionButton.setBorder(BorderFactory.createLineBorder(Color.BLACK, 2));
         directionButton.addActionListener(this);
         //set constraints
         c.insets = new Insets(5, 5, 5, 5); //the padding around component
         c.ipadx = 5;
         c.ipady = 5;
-        c.gridx = 2;
-        c.gridy = 1;
-        c.gridwidth = 1;
+        c.gridx = 1;
+        c.gridy = 2;
+        c.gridwidth = 2;
         //finally add
         actionPanel.add(directionButton, c);
         
@@ -115,6 +106,7 @@ public class BattleshipsSetupShips extends JFrame implements ActionListener {
         //
         doneButton = new JButton("Battle!");
         doneButton.setBackground(BattleshipsMainFrame.BUTTON_COLOUR);
+        doneButton.setForeground(Color.BLACK);
         doneButton.setFont(BattleshipsMainFrame.MAIN_FONT);
         doneButton.setBorder(BorderFactory.createLineBorder(Color.BLACK, 2));
         doneButton.addActionListener(this);
@@ -122,9 +114,9 @@ public class BattleshipsSetupShips extends JFrame implements ActionListener {
         c.insets = new Insets(25, 5, 5, 5); //the padding around component
         c.ipadx = 5;
         c.ipady = 5;
-        c.gridx = 1;
+        c.gridx = 2;
         c.gridy = 4;
-        c.gridwidth = 2;
+        c.gridwidth = 1;
         //finally add
         actionPanel.add(doneButton, c);
         
@@ -132,12 +124,17 @@ public class BattleshipsSetupShips extends JFrame implements ActionListener {
         //
         //number set label
         //
+        numberSetLabel.setFont(BattleshipsMainFrame.MAIN_FONT);
+        numberSetLabel.setBackground(BattleshipsMainFrame.BG_COLOUR);
+        numberSetLabel.setForeground(Color.BLACK);
+        numberSetLabel.setBorder(BorderFactory.createLineBorder(Color.BLACK, 2));
+        //set constraints
         c.insets = new Insets(25, 5, 5, 5); //the padding around the component
         c.ipadx = 5;
         c.ipady = 5;
         c.gridx = 0;
         c.gridy = 4;
-        c.gridwidth = 1;
+        c.gridwidth = 2;
         //finally add
         actionPanel.add(numberSetLabel, c);
         
@@ -145,8 +142,9 @@ public class BattleshipsSetupShips extends JFrame implements ActionListener {
         //
         //aircraft button
         //
-        aircraftButton = new JButton("Aircraft Carrier");
+        aircraftButton = new JButton("Aircraft Carrier (5)");
         aircraftButton.setBackground(BattleshipsMainFrame.BUTTON_COLOUR);
+        aircraftButton.setForeground(Color.BLACK);
         aircraftButton.setFont(BattleshipsMainFrame.MEDIUM_FONT);
         aircraftButton.setBorder(BorderFactory.createLineBorder(Color.BLACK, 2));
         aircraftButton.addActionListener(this);
@@ -164,8 +162,9 @@ public class BattleshipsSetupShips extends JFrame implements ActionListener {
         //
         //battleship button
         //
-        battleshipButton = new JButton("Battleship");
+        battleshipButton = new JButton("Battleship (4)");
         battleshipButton.setBackground(BattleshipsMainFrame.BUTTON_COLOUR);
+        battleshipButton.setForeground(Color.BLACK);
         battleshipButton.setFont(BattleshipsMainFrame.MEDIUM_FONT);
         battleshipButton.setBorder(BorderFactory.createLineBorder(Color.BLACK, 2));
         battleshipButton.addActionListener(this);
@@ -183,8 +182,9 @@ public class BattleshipsSetupShips extends JFrame implements ActionListener {
         //
         //submarine button
         //
-        submarineButton = new JButton("Submarine");
+        submarineButton = new JButton("Submarine (3)");
         submarineButton.setBackground(BattleshipsMainFrame.BUTTON_COLOUR);
+        submarineButton.setForeground(Color.BLACK);
         submarineButton.setFont(BattleshipsMainFrame.MEDIUM_FONT);
         submarineButton.setBorder(BorderFactory.createLineBorder(Color.BLACK, 2));
         submarineButton.addActionListener(this);
@@ -202,8 +202,9 @@ public class BattleshipsSetupShips extends JFrame implements ActionListener {
         //
         //destroyer button
         //
-        destroyerButton = new JButton("Destroyer");
+        destroyerButton = new JButton("Destroyer (3)");
         destroyerButton.setBackground(BattleshipsMainFrame.BUTTON_COLOUR);
+        destroyerButton.setForeground(Color.BLACK);
         destroyerButton.setFont(BattleshipsMainFrame.MEDIUM_FONT);
         destroyerButton.setBorder(BorderFactory.createLineBorder(Color.BLACK, 2));
         destroyerButton.addActionListener(this);
@@ -221,8 +222,9 @@ public class BattleshipsSetupShips extends JFrame implements ActionListener {
         //
         //minesweeper button
         //
-        minesweeperButton = new JButton("Minesweeper");
+        minesweeperButton = new JButton("Minesweeper (2)");
         minesweeperButton.setBackground(BattleshipsMainFrame.BUTTON_COLOUR);
+        minesweeperButton.setForeground(Color.BLACK);
         minesweeperButton.setFont(BattleshipsMainFrame.MEDIUM_FONT);
         minesweeperButton.setBorder(BorderFactory.createLineBorder(Color.BLACK, 2));
         minesweeperButton.addActionListener(this);
@@ -237,17 +239,31 @@ public class BattleshipsSetupShips extends JFrame implements ActionListener {
         actionPanel.add(minesweeperButton, c);
         
         
-        //set constraints for direction label
+        //
+        //direction label
+        //
+        directionLabel.setFont(BattleshipsMainFrame.MAIN_FONT);
+        directionLabel.setBackground(BattleshipsMainFrame.BG_COLOUR);
+        directionLabel.setForeground(Color.BLACK);
+        directionLabel.setBorder(BorderFactory.createLineBorder(Color.BLACK, 2));
+        //set constraints
         c.insets = new Insets(20, 5, 5, 5); //the padding around component
         c.ipadx = 5;
         c.ipady = 5;
         c.gridx = 0;
         c.gridy = 2;
-        c.gridwidth = 3;
+        c.gridwidth = 1;
         actionPanel.add(directionLabel, c);
         
         
-        //set constraints for selected label
+        //
+        //selected label
+        //
+        selectedLabel.setFont(BattleshipsMainFrame.MAIN_FONT);
+        selectedLabel.setBackground(BattleshipsMainFrame.BG_COLOUR);
+        selectedLabel.setForeground(Color.BLACK);
+        selectedLabel.setBorder(BorderFactory.createLineBorder(Color.BLACK, 2));
+        //set constraints
         c.insets = new Insets(20, 5, 5, 5); //the padding around component
         c.ipadx = 5;
         c.ipady = 5;
@@ -268,14 +284,13 @@ public class BattleshipsSetupShips extends JFrame implements ActionListener {
         
         fieldPanel.setLayout(fieldLayout);
         fieldPanel.setBackground(BattleshipsMainFrame.BG_COLOUR);
-        fieldPanel.setPreferredSize(new Dimension(600, 600));
         fieldPanel.add(blankPanel);
         
         //add number labels
         for(int i = 0; i<10; i++) {
             JLabel l = new JLabel(Integer.toString(i+1), JLabel.CENTER);
-            l.setFont(BattleshipsMainFrame.MAIN_FONT);
             l.setForeground(Color.WHITE);
+            l.setFont(BattleshipsMainFrame.MAIN_FONT);
             
             fieldPanel.add(l);
         }
@@ -286,7 +301,7 @@ public class BattleshipsSetupShips extends JFrame implements ActionListener {
             
             JLabel l = new JLabel(letter, JLabel.CENTER);
             l.setForeground(Color.WHITE);
-            l.setFont(BattleshipsMainFrame.`MAIN_FONT);
+            l.setFont(BattleshipsMainFrame.MAIN_FONT);
             
             fieldPanel.add(l); //add letter label
             
@@ -649,12 +664,13 @@ public class BattleshipsSetupShips extends JFrame implements ActionListener {
                 currentDirection = "Down";
             }
             
-            directionLabel.setText(currentDirection);
+            directionLabel.setText("Direction:\n" + currentDirection);
             
         } else if(e.getSource() == doneButton) {
             if(shipsPlaced == 5) {
                 dispose();
                 BattleshipsGame game = new BattleshipsGame();
+                
             } else {
                 JOptionPane.showMessageDialog(actionPanel, "You still have " + (5-shipsPlaced) + " Ships to place!", "Not done yet!", JOptionPane.ERROR_MESSAGE);
             }
