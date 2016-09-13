@@ -36,6 +36,8 @@ public class BattleshipsGamePanel extends JPanel implements ActionListener {
     private ArrayList<BattleshipsGameMainPanel> opponentDestroyerPanels = new ArrayList<BattleshipsGameMainPanel>();
     private ArrayList<BattleshipsGameMainPanel> opponentMinesweeperPanels = new ArrayList<BattleshipsGameMainPanel>();
     
+    private ArrayList<BattleshipsGameMainPanel> opponentPanels = new ArrayList<BattleshipsGameMainPanel>();
+    
     //stores the players ships
     private ArrayList<BattleshipsGameMainPanel> playerAircraftPanels = new ArrayList<BattleshipsGameMainPanel>();
     private ArrayList<BattleshipsGameMainPanel> playerBattleshipPanels = new ArrayList<BattleshipsGameMainPanel>();
@@ -48,7 +50,10 @@ public class BattleshipsGamePanel extends JPanel implements ActionListener {
     private Socket connection;
     
     private BattleshipsCommand battleshipsCommandObject;
+    private GetCommand commandObject;
     
+    
+    private final int TOTAL_LENGTH = BattleshipsSetupShips.AIRCRAFT_LENGTH + BattleshipsSetupShips.BATTLESHIP_LENGTH + BattleshipsSetupShips.SUBMARINE_LENGTH + BattleshipsSetupShips.DESTROYER_LENGTH + BattleshipsSetupShips.MINESWEEPER_LENGTH;
     public BattleshipsGamePanel() {
         this.connection = BattleshipsHostJoin.connection;
         
@@ -96,6 +101,7 @@ public class BattleshipsGamePanel extends JPanel implements ActionListener {
         //
         battleLog = new JTextArea();
         battleLog.setFont(BattleshipsMainFrame.SMALL_FONT);
+        battleLog.setForeground(Color.BLACK);
         battleLog.setEditable(false);
         
         JScrollPane logScroll = new JScrollPane(battleLog,
@@ -117,6 +123,7 @@ public class BattleshipsGamePanel extends JPanel implements ActionListener {
         //label   
         controlLocationLabel = new JLabel("A1");
         controlLocationLabel.setBackground(BattleshipsMainFrame.BG_COLOUR);
+        controlLocationLabel.setForeground(Color.BLACK);
         controlLocationLabel.setFont(BattleshipsMainFrame.MAIN_FONT);
         controlLocationLabel.setForeground(Color.WHITE);
         controlLocationLabel.setBorder(BorderFactory.createLineBorder(Color.BLACK, 3));
@@ -132,6 +139,7 @@ public class BattleshipsGamePanel extends JPanel implements ActionListener {
         //button
         controlFireButton = new JButton("FIRE!");
         controlFireButton.setBackground(BattleshipsMainFrame.BUTTON_COLOUR);
+        controlFireButton.setForeground(Color.BLACK);
         controlFireButton.addActionListener(this);
         controlFireButton.setFont(BattleshipsMainFrame.MAIN_FONT);
         //set constraints
@@ -158,22 +166,47 @@ public class BattleshipsGamePanel extends JPanel implements ActionListener {
         
         battleshipsCommandObject = new BattleshipsCommand();
         
-        GetCommand commandObject = new GetCommand();
+        commandObject = new GetCommand();
         Thread t1 = new Thread(commandObject);
         t1.start();
+        
+        //give the player the ships and setup ours
+        giveOpponentShips();
+        
     }
     
     private class GetCommand extends Thread {
-        //this subclass will continuously check for a new command and send it to the
+        //this subclass will continuously check for a new command
         private String command;
+        private ArrayList<String> allLocations = new ArrayList<String>();
+        private boolean setup = false;
         
         public void run() {
             try {
-                in = new BufferedReader(new InputStreamReader(connection.getInputStream()));;
+                in = new BufferedReader(new InputStreamReader(connection.getInputStream()));
                 while(true) {
-                    String line = in.readLine();
-                    if(line != null) {
-                        System.out.println(line);
+                    command = in.readLine();
+                    
+                    if(command == null) { //we have lost connection, notify the user exit this loop
+                        System.out.println("Connection lost."); 
+                        break;
+                    } else if(command.equals("setup")) {  //this means that we are going to get the locations of ships
+                        setup = true;
+                        System.out.println("Setup Entered");
+                        while(setup) {
+                            String line = in.readLine();
+                            if(line.equals("end")) { //when the line is end we have finished
+                                setup = false;
+                                System.out.println("Setup Finished");
+                                setOpponentShips();
+                                break;
+                            } else {
+                                allLocations.add(line);
+                                System.out.println(allLocations);
+                            }
+                        }
+                    } else {
+                        System.out.println(command);
                     }
                 }
             } catch(Exception e) {
@@ -183,6 +216,10 @@ public class BattleshipsGamePanel extends JPanel implements ActionListener {
         
         public String getCommand() {
             return command;
+        }
+        
+        public ArrayList<String> getLocations() {
+            return allLocations;
         }
     }
     
@@ -256,10 +293,45 @@ public class BattleshipsGamePanel extends JPanel implements ActionListener {
         
     }
     
-    //get the initial command and setup ships
+    //setup the opponent ships
     private void setOpponentShips() {
+        //we need to make sure we are adding the correct ammount and getting the correct location so we need to start from the correct location in the list
+        ArrayList<String> opponentsLocations = commandObject.getLocations(); //list of the locations
         
+        for(int i = 0; i<opponentsLocations.size(); i++) {
+            for(int x = 0; x<listOfOpponentPanels.size(); x++) {
+                if(listOfOpponentPanels.get(x).getName().equals(opponentsLocations.get(i))) {
+                    listOfOpponentPanels.get(x).setShip();
+                }
+            }
+        }
+        
+        System.out.println("Opponents ships setup");
     }
+    
+    //give the opponent our ship locations
+    private void giveOpponentShips() {
+        battleshipsCommandObject.sendCommand("setup"); //say that we are giving them ships
+        
+        for(int i = 0; i<playerAircraftPanels.size(); i++) {
+            battleshipsCommandObject.sendCommand(playerAircraftPanels.get(i).getName());
+        }
+        for(int i = 0; i<playerBattleshipPanels.size(); i++) {
+            battleshipsCommandObject.sendCommand(playerBattleshipPanels.get(i).getName());
+        }
+        for(int i = 0; i<playerSubmarinePanels.size(); i++) {
+            battleshipsCommandObject.sendCommand(playerSubmarinePanels.get(i).getName());
+        }
+        for(int i = 0; i<playerDestroyerPanels.size(); i++) {
+            battleshipsCommandObject.sendCommand(playerDestroyerPanels.get(i).getName());
+        }
+        for(int i = 0; i<playerMinesweeperPanels.size(); i++) {
+            battleshipsCommandObject.sendCommand(playerMinesweeperPanels.get(i).getName());
+        }
+        
+        battleshipsCommandObject.sendCommand("end"); //say that we have finished
+    }
+    
     
     public void actionPerformed(ActionEvent e) {
         String location = controlLocationLabel.getText();
