@@ -59,6 +59,7 @@ public class BattleshipsHostJoin extends JPanel implements ActionListener {
         //mainHostButton
         mainHostButton = new JButton("Host");
         mainHostButton.setBackground(BattleshipsMainFrame.BUTTON_COLOUR);
+        mainHostButton.setForeground(Color.BLACK);
         mainHostButton.setBorder(BorderFactory.createLineBorder(Color.BLACK, 2));
         mainHostButton.setFont(BattleshipsMainFrame.MAIN_FONT);
         mainHostButton.addActionListener(this);
@@ -75,6 +76,7 @@ public class BattleshipsHostJoin extends JPanel implements ActionListener {
         //mainJoinButton
         mainJoinButton = new JButton("Join");
         mainJoinButton.setBackground(BattleshipsMainFrame.BUTTON_COLOUR);
+        mainJoinButton.setForeground(Color.BLACK);
         mainJoinButton.setBorder(BorderFactory.createLineBorder(Color.BLACK, 2));
         mainJoinButton.setFont(BattleshipsMainFrame.MAIN_FONT);
         mainJoinButton.addActionListener(this);
@@ -91,6 +93,7 @@ public class BattleshipsHostJoin extends JPanel implements ActionListener {
         //mainHelpButton
         mainHelpButton = new JButton("Help");
         mainHelpButton.setBackground(BattleshipsMainFrame.BUTTON_COLOUR);
+        mainHelpButton.setForeground(Color.BLACK);
         mainHelpButton.setBorder(BorderFactory.createLineBorder(Color.BLACK, 2));
         mainHelpButton.setFont(BattleshipsMainFrame.MAIN_FONT);
         mainHelpButton.addActionListener(this);
@@ -107,6 +110,7 @@ public class BattleshipsHostJoin extends JPanel implements ActionListener {
         //mainUsernameLabel
         mainUsernameLabel = new JLabel("Username");
         mainUsernameLabel.setBackground(BattleshipsMainFrame.BG_COLOUR);
+        mainUsernameLabel.setForeground(Color.BLACK);
         mainUsernameLabel.setFont(BattleshipsMainFrame.MAIN_FONT);
         //set constraints
         c.insets = new Insets(10, 0, 0, 0); //the padding around component
@@ -121,6 +125,7 @@ public class BattleshipsHostJoin extends JPanel implements ActionListener {
         //mainUsernameTextField
         mainUsernameTextField = new JTextField(5);
         mainUsernameTextField.setBorder(BorderFactory.createLineBorder(Color.BLACK, 2));
+        mainUsernameTextField.setForeground(Color.BLACK);
         mainUsernameTextField.setFont(BattleshipsMainFrame.MAIN_FONT);
         //set constraints
         c.insets = new Insets(10, 10, 0, 0); //the padding around component
@@ -143,6 +148,7 @@ public class BattleshipsHostJoin extends JPanel implements ActionListener {
         //hostHeaderLabel
         hostHeaderLabel = new JLabel("Host A Game");
         hostHeaderLabel.setBackground(BattleshipsMainFrame.BG_COLOUR);
+        hostHeaderLabel.setForeground(Color.BLACK);
         hostHeaderLabel.setFont(BattleshipsMainFrame.MAIN_FONT);
         //set constraints
         c.insets = new Insets(10, 0, 0, 0); //the padding around component
@@ -157,6 +163,7 @@ public class BattleshipsHostJoin extends JPanel implements ActionListener {
         //hostPortLabel
         hostPortLabel = new JLabel("Port");
         hostPortLabel.setBackground(BattleshipsMainFrame.BG_COLOUR);
+        hostPortLabel.setForeground(Color.BLACK);
         hostPortLabel.setFont(BattleshipsMainFrame.MAIN_FONT);
         //set constraints
         c.insets = new Insets(40, 0, 0, 0); //the padding around component
@@ -170,6 +177,7 @@ public class BattleshipsHostJoin extends JPanel implements ActionListener {
         
         //hostPortTextField
         hostPortTextField = new JTextField(5);
+        hostPortTextField.setForeground(Color.BLACK);
         hostPortTextField.setBorder(BorderFactory.createLineBorder(Color.BLACK, 2));
         hostPortTextField.setFont(BattleshipsMainFrame.MAIN_FONT);
         //set constraints
@@ -185,6 +193,7 @@ public class BattleshipsHostJoin extends JPanel implements ActionListener {
         //hostHostButton
         hostHostButton = new JButton("Start");
         hostHostButton.setBackground(BattleshipsMainFrame.BUTTON_COLOUR);
+        hostHostButton.setForeground(Color.BLACK);
         hostHostButton.setBorder(BorderFactory.createLineBorder(Color.BLACK, 2));
         hostHostButton.setFont(BattleshipsMainFrame.MAIN_FONT);
         hostHostButton.addActionListener(this);
@@ -209,6 +218,7 @@ public class BattleshipsHostJoin extends JPanel implements ActionListener {
         //joinHeaderLabel
         joinHeaderLabel = new JLabel("Join A Game");
         joinHeaderLabel.setBackground(BattleshipsMainFrame.BG_COLOUR);
+        joinHeaderLabel.setForeground(Color.BLACK);
         joinHeaderLabel.setFont(BattleshipsMainFrame.MAIN_FONT);
         //set constraints
         c.insets = new Insets(10, 0, 0, 0); //the padding around component
@@ -223,6 +233,7 @@ public class BattleshipsHostJoin extends JPanel implements ActionListener {
         //joinHostLabel
         joinHostLabel = new JLabel("Address");
         joinHostLabel.setBackground(BattleshipsMainFrame.BG_COLOUR);
+        joinHostLabel.setForeground(Color.BLACK);
         joinHostLabel.setFont(BattleshipsMainFrame.MAIN_FONT);
         //set constraints
         c.insets = new Insets(20, 0, 0, 0); //the padding around component
@@ -237,6 +248,7 @@ public class BattleshipsHostJoin extends JPanel implements ActionListener {
         //joinHostTextField
         joinHostTextField = new JTextField(5);
         joinHostTextField.setBorder(BorderFactory.createLineBorder(Color.BLACK, 2));
+        joinHostTextField.setForeground(Color.BLACK);
         joinHostTextField.setFont(BattleshipsMainFrame.MAIN_FONT);
         //set constraints
         c.insets = new Insets(20, 10, 0, 0); //the padding around component
@@ -251,6 +263,7 @@ public class BattleshipsHostJoin extends JPanel implements ActionListener {
         //joinPortLabel
         joinPortLabel = new JLabel("Port");
         joinPortLabel.setBackground(BattleshipsMainFrame.BG_COLOUR);
+        joinPortLabel.setForeground(Color.BLACK);
         joinPortLabel.setFont(BattleshipsMainFrame.MAIN_FONT);
         //set constraints
         c.insets = new Insets(20, 10, 0, 0); //the padding around component
@@ -265,6 +278,7 @@ public class BattleshipsHostJoin extends JPanel implements ActionListener {
         //joinPortTextField
         joinPortTextField = new JTextField(5);
         joinPortTextField.setBorder(BorderFactory.createLineBorder(Color.BLACK, 2));
+        joinPortTextField.setForeground(Color.BLACK);
         joinPortTextField.setFont(BattleshipsMainFrame.MAIN_FONT);
         //set constraints
         c.insets = new Insets(20, 0, 0, 0); //the padding around component
@@ -279,6 +293,7 @@ public class BattleshipsHostJoin extends JPanel implements ActionListener {
         //joinJoinButton
         joinJoinButton = new JButton("Join");
         joinJoinButton.setBackground(BattleshipsMainFrame.BUTTON_COLOUR);
+        joinJoinButton.setForeground(Color.BLACK);
         joinJoinButton.setBorder(BorderFactory.createLineBorder(Color.BLACK, 2));
         joinJoinButton.setFont(BattleshipsMainFrame.MAIN_FONT);
         joinJoinButton.addActionListener(this);
