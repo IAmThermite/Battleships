@@ -12,7 +12,7 @@ public class BattleshipsMainFrame {
     public static final Color BUTTON_COLOUR = new Color(255, 205, 0);
     
     //colours for the panels
-    public static final Color HIT_COLOUR = new Color(245, 245, 90);
+    public static final Color HIT_COLOUR = new Color(245, 145, 60);
     public static final Color MISS_COLOUR = Color.WHITE;
     public static final Color NORMAL_COLOUR = new Color(0, 165, 165);
     public static final Color HOVER_COLOUR = new Color(0, 125, 125);
