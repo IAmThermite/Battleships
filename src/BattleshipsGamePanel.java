@@ -19,7 +19,7 @@ public class BattleshipsGamePanel extends JPanel implements ActionListener {
     private JLabel playerLabel;
     
     private JButton controlFireButton;
-    public static JLabel controlLocationLabel; //static so that it can be changed golbaly
+    public static JLabel controlLocationLabel; //the location of selected panel
     
     private JTextArea battleLog;
     
@@ -27,18 +27,9 @@ public class BattleshipsGamePanel extends JPanel implements ActionListener {
     private BattleshipsGameFieldPanel playerFieldPanel;
     
     public static ArrayList<BattleshipsGameMainPanel> listOfOpponentPanels = new ArrayList<BattleshipsGameMainPanel>(); //stores the instances of the opponents panels
-    public static ArrayList<BattleshipsGameMainPanel> listOfPlayerPanels = new ArrayList<BattleshipsGameMainPanel>(); //stores the instances of the opponents panels
+    public static ArrayList<BattleshipsGameMainPanel> listOfPlayerPanels = new ArrayList<BattleshipsGameMainPanel>(); //stores the instances of our panels
     
-    //stores the opponents ships - probably no longer need these
-    private ArrayList<BattleshipsGameMainPanel> opponentAircraftPanels = new ArrayList<BattleshipsGameMainPanel>();
-    private ArrayList<BattleshipsGameMainPanel> opponentBattleshipPanels = new ArrayList<BattleshipsGameMainPanel>();
-    private ArrayList<BattleshipsGameMainPanel> opponentSubmarinePanels = new ArrayList<BattleshipsGameMainPanel>();
-    private ArrayList<BattleshipsGameMainPanel> opponentDestroyerPanels = new ArrayList<BattleshipsGameMainPanel>();
-    private ArrayList<BattleshipsGameMainPanel> opponentMinesweeperPanels = new ArrayList<BattleshipsGameMainPanel>();
-    
-    private ArrayList<BattleshipsGameMainPanel> opponentPanels = new ArrayList<BattleshipsGameMainPanel>();
-    
-    //stores the players ships - still do need these though
+    //stores the players ships
     private ArrayList<BattleshipsGameMainPanel> playerAircraftPanels = new ArrayList<BattleshipsGameMainPanel>();
     private ArrayList<BattleshipsGameMainPanel> playerBattleshipPanels = new ArrayList<BattleshipsGameMainPanel>();
     private ArrayList<BattleshipsGameMainPanel> playerSubmarinePanels = new ArrayList<BattleshipsGameMainPanel>();
@@ -52,13 +43,29 @@ public class BattleshipsGamePanel extends JPanel implements ActionListener {
     private BattleshipsCommand battleshipsCommandObject;
     private GetCommand commandObject;
     
+    private boolean running = true; //the game is still running
+    
     private boolean isMyTurn = false;
-    private int myNumber;
+    private int myNumber; //stores our randomly generated number
     private String myName = BattleshipsHostJoin.username;
     private String opponentName;
     
+    //stores the number of panels in each particular ship that are hit
+    private int numAircraftHit = 0;
+    private int numBattleshipHit = 0;
+    private int numSubmarineHit = 0;
+    private int numDestroyerHit = 0;
+    private int numMinesweeperHit = 0;
+    
+    private boolean aircraftSunk = false;
+    private boolean battleshipSunk = false;
+    private boolean submarineSunk = false;
+    private boolean destroyerSunk = false;
+    private boolean minesweeperSunk = false;
+    
     
     private final int TOTAL_LENGTH = BattleshipsSetupShips.AIRCRAFT_LENGTH + BattleshipsSetupShips.BATTLESHIP_LENGTH + BattleshipsSetupShips.SUBMARINE_LENGTH + BattleshipsSetupShips.DESTROYER_LENGTH + BattleshipsSetupShips.MINESWEEPER_LENGTH;
+    
     public BattleshipsGamePanel() {
         this.connection = BattleshipsHostJoin.connection;
         
@@ -190,90 +197,135 @@ public class BattleshipsGamePanel extends JPanel implements ActionListener {
         private boolean setup = false;
         private boolean name = false;
         private boolean random = false;
+        private boolean shot = true;
         
         public void run() {
             try {
                 in = new BufferedReader(new InputStreamReader(connection.getInputStream()));
-                while(true) {
-                    command = in.readLine();
-                    
-                    if(command == null) { //we have lost connection, notify the user exit this loop
+                while(running) {
+                    try {
+                        command = in.readLine();
+                        
+                        if(command == null) { //we have lost connection, notify the user exit this loop
+                            lostConnection();
+                            break;
+                        } else if(command.equals("setup")) {  //this means that we are going to get the locations of ships
+                            setup = true;
+                            while(setup) {
+                                String line = in.readLine();
+                                if(line.equals("end")) { //when the line is end we have finished
+                                    setup = false;
+                                    setOpponentShips();
+                                    break;
+                                } else {
+                                    allLocations.add(line);
+                                }
+                            }
+                        } else if(command.equals("name")) { //the opponent is giving us their name
+                            name = true;
+                            while(name) {
+                                String line = in.readLine();
+                                if(line.equals("end")) { //when we have finished
+                                    name = false;
+                                    break;
+                                } else {
+                                    opponentName = line;
+                                    setOpponentName();
+                                }
+                            }
+                        } else if(command.equals("random")) { //we are getting a random number to find out who starts
+                            random = true;
+                            while(random) {
+                                String line = in.readLine();
+                                int number = 0;
+                                try {
+                                    number = Integer.parseInt(line);
+                                } catch(Exception e) {} //ignore failure
+                                
+                                if(line.equals("end")) { //when we have finished
+                                    random = false;
+                                    break;
+                                } else if(number > myNumber) {
+                                    isMyTurn = false;
+                                    battleLog.append(opponentName + " is starting!\n");
+                                } else if(number < myNumber){
+                                    isMyTurn = true;
+                                    battleLog.append("We are starting!\n");
+                                } else {
+                                    giveRandomNumber();
+                                }
+                            }
+                        } else if(command.equals("win")) { //when the opponent has won
+                            weLost();
+                            break;
+                        } else if(command.equals("aircraft")) { //the ship we just hit
+                            numAircraftHit++;
+                            checkWin();
+                        } else if(command.equals("battleship")) {
+                            numBattleshipHit++;
+                            checkWin();
+                        } else if(command.equals("submarine")) {
+                            numSubmarineHit++;
+                            checkWin();
+                        } else if(command.equals("destroyer")) {
+                            numDestroyerHit++;
+                            checkWin();
+                        } else if(command.equals("minesweeper")) {
+                            numMinesweeperHit++;
+                            checkWin();
+                        } else if(command.equals("shot")){ //we are being shot at
+                            shot = true;
+                            while(shot) {
+                                String loc = in.readLine();
+                                if(loc.equals("end")) { //opponent missed
+                                    shot = false;
+                                    break;
+                                } else {
+                                    setOpponentShot(loc);
+                                    for(int i = 0; i<listOfPlayerPanels.size(); i++) {
+                                        if(listOfPlayerPanels.get(i).getName().equals(loc)) {
+                                            battleshipsCommandObject.sendCommand(whichShip(loc)); //finds out which ship was hit and sends it back
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    } catch(Exception e) { //we have lost connection
                         lostConnection();
                         break;
-                    } else if(command.equals("setup")) {  //this means that we are going to get the locations of ships
-                        setup = true;
-                        while(setup) {
-                            String line = in.readLine();
-                            if(line.equals("end")) { //when the line is end we have finished
-                                setup = false;
-                                setOpponentShips();
-                                break;
-                            } else {
-                                allLocations.add(line);
-                                System.out.println(allLocations);
-                            }
-                        }
-                    } else if(command.equals("name")) { //the opponent is giving us their name
-                        name = true;
-                        while(name) {
-                            String line = in.readLine();
-                            if(line.equals("end")) { //when we have finished
-                                name = false;
-                                break;
-                            } else {
-                                System.out.println("opponents name " + line);
-                                opponentName = line;
-                                setOpponentName();
-                            }
-                        }
-                    } else if(command.equals("random")) { //we are getting a random number to find out whos turn it is
-                        random = true;
-                        while(random) {
-                            String line = in.readLine();
-                            int number = 0;
-                            try {
-                                number = Integer.parseInt(line);
-                            } catch(Exception e) {} //ignore failure
-                            
-                            if(line.equals("end")) { //when we have finished
-                                random = false;
-                                break;
-                            } else if(number > myNumber) {
-                                isMyTurn = false;
-                                battleLog.append(opponentName + " is starting!\n");
-                            } else if(number < myNumber){
-                                isMyTurn = true;
-                                battleLog.append("We are starting!\n");
-                            } else {
-                                System.out.println("random tie");
-                                giveRandomNumber();
-                            }
-                        }
-                    } else {
-                        System.out.println(command);
-                        setOpponentShot(command);
                     }
                 }
             } catch(Exception e) {
-                e.printStackTrace();
+                lostConnection();
             }
         }
         
+        //return all the locations that we got from the opponent
         public ArrayList<String> getLocations() {
             return allLocations;
         }
     }
     
-    //the opponent has shot at us, where and did it hit?
-    private void setOpponentShot(String location) {        
-        battleLog.append(opponentName + " shot at " + location + "\n");
+    
+    //
+    //GAME LOGIC
+    //
+    //shoot at a location
+    private void sendShot(String location) {
+        battleshipsCommandObject.sendCommand(location);
+        checkShip(location);
+    }
+    
+    //the opponent has shot at us, where and did it hit
+    private void setOpponentShot(String location) {
         for(int i = 0; i<listOfPlayerPanels.size(); i++) {
             if(listOfPlayerPanels.get(i).getName().equals(location)) {
+                battleLog.append(opponentName + " shot at " + location + "\n");
                 listOfPlayerPanels.get(i).setHit();
-                if(listOfPlayerPanels.get(i).getHasShip()) {
+                if(listOfPlayerPanels.get(i).getHasShip()) { //if it has a ship it is not my turn yet
                     battleLog.append(opponentName + " hit one!\n");
                     isMyTurn = false;
-                } else {
+                } else { //otherwise it is now since they missed
                     battleLog.append(opponentName + " missed!\n");
                     isMyTurn = true;
                 }
@@ -282,6 +334,125 @@ public class BattleshipsGamePanel extends JPanel implements ActionListener {
         }
     }
     
+    //find out if we have destroyed all ships
+    private void checkWin() {
+        //if we have already sunk the ship dont prompt the user again
+        if(!aircraftSunk) {
+            if(numAircraftHit == BattleshipsSetupShips.AIRCRAFT_LENGTH) {
+                battleLog.append("You sunk " + opponentName + "'s Aircraft Carrier!\n");
+                aircraftSunk = true;
+            }
+        } 
+        if(!battleshipSunk) {
+            if(numBattleshipHit == BattleshipsSetupShips.BATTLESHIP_LENGTH) {
+                battleLog.append("You sunk " + opponentName + "'s Battleship!\n");
+                battleshipSunk = true;
+            }
+        }
+        if(!submarineSunk) {
+            if(numSubmarineHit == BattleshipsSetupShips.SUBMARINE_LENGTH) {
+                battleLog.append("You sunk " + opponentName + "'s Submarine!\n");
+                submarineSunk = true;
+            }
+        }
+        if(!destroyerSunk) {
+            if(numDestroyerHit == BattleshipsSetupShips.DESTROYER_LENGTH) {
+                battleLog.append("You sunk " + opponentName + "'s Destroyer!\n");
+                destroyerSunk = true;
+            }
+        }
+        if(!minesweeperSunk) {
+            if(numMinesweeperHit == BattleshipsSetupShips.MINESWEEPER_LENGTH) {
+                battleLog.append("You sunk " + opponentName + "'s Minesweeper!\n");
+                minesweeperSunk = true;
+            }
+        }
+        
+        if(aircraftSunk && battleshipSunk && submarineSunk && destroyerSunk && minesweeperSunk) {
+            battleshipsCommandObject.sendCommand("win");
+            JOptionPane.showMessageDialog(this, "You sunk all " + opponentName + "'s ships! You win!", "You Win!", JOptionPane.INFORMATION_MESSAGE);
+            try {
+                connection.close();
+            } catch(Exception e) {
+                e.printStackTrace();
+            }
+        }
+    }
+    
+    //checks to see if there is a ship on player board and will set the panel colour
+    private void checkShip(String location) {
+        for(int i = 0; i <listOfOpponentPanels.size(); i++) {
+            if(listOfOpponentPanels.get(i).getName().equals(location)) {
+                if(!listOfOpponentPanels.get(i).getIsPlayer()) { //if it isnt the player panel
+                    if(listOfOpponentPanels.get(i).getIsHit()) {
+                        JOptionPane.showMessageDialog(this, "You have already shot at that panel!", "Invalid Location!", JOptionPane.ERROR_MESSAGE);
+                    } else {
+                        battleLog.append(location + " was shot at!\n");
+                        listOfOpponentPanels.get(i).setHit();
+                        
+                        if(listOfOpponentPanels.get(i).getHasShip()) { //i hit one so it is my turn still
+                            battleLog.append("You hit one!\n");
+                            isMyTurn = true;
+                        } else { //i missed, not my turn anymore
+                            battleLog.append("You missed!\n");
+                            isMyTurn = false;
+                            battleshipsCommandObject.sendCommand("end");
+                            battleLog.append("It is no longer your turn!\n");
+                        }
+                    }
+                }
+                break; //for some reason it loops through twice so break out of it
+            }
+        }
+    }
+    
+    //returns the type of ship that was hit
+    private String whichShip(String location) {
+        for(int i = 0; i<playerAircraftPanels.size(); i++) {
+            if(playerAircraftPanels.get(i).getName().equals(location)) {
+                return "aircraft";
+            }
+        }
+        for(int i = 0; i<playerBattleshipPanels.size(); i++) {
+            if(playerBattleshipPanels.get(i).getName().equals(location)) {
+                return "battleship";
+            }
+        }
+        for(int i = 0; i<playerSubmarinePanels.size(); i++) {
+            if(playerSubmarinePanels.get(i).getName().equals(location)) {
+                return "submarine";
+            }
+        }
+        for(int i = 0; i<playerDestroyerPanels.size(); i++) {
+            if(playerDestroyerPanels.get(i).getName().equals(location)) {
+                return "destroyer";
+            }
+        }
+        for(int i = 0; i<playerMinesweeperPanels.size(); i++) {
+            if(playerMinesweeperPanels.get(i).getName().equals(location)) {
+                return "minesweeper";
+            }
+        }
+        
+        return "";
+    }
+    
+    //we lost the game, notify player and close everything
+    private void weLost() {
+        running = false;
+        isMyTurn = false;
+        JOptionPane.showMessageDialog(this, opponentName + " sunk all your ships! Game Over!", "You Lose :(", JOptionPane.INFORMATION_MESSAGE);
+        try { //closing the connection, will prompt the user that the connection has failed. need to fix
+            connection.close();
+        } catch(Exception e) {
+            e.printStackTrace();
+        }
+    }
+    
+    
+    //
+    //SETTING UP
+    //
     //send a random number (0-2^32) to the opponent, if it is greater than theirs then we start
     private void giveRandomNumber() {
         Random rand = new Random();
@@ -292,11 +463,6 @@ public class BattleshipsGamePanel extends JPanel implements ActionListener {
         battleshipsCommandObject.sendCommand("end");
     }
     
-    //set the opponents name on their grid
-    private void setOpponentName() {
-        opponentLabel.setText(opponentName + "'s grid");
-    }
-    
     //give the opponent our name
     private void giveOpponentName() {
         battleshipsCommandObject.sendCommand("name");
@@ -304,17 +470,30 @@ public class BattleshipsGamePanel extends JPanel implements ActionListener {
         battleshipsCommandObject.sendCommand("end");
     }
     
-    //when we loose connection
-    private void lostConnection() {
-        JOptionPane.showMessageDialog(this, "We have lost connection with the other user! Sorry!", "Oh Noes!", JOptionPane.ERROR_MESSAGE);
-        isMyTurn = false;
-        try {
-            connection.close();
-        } catch(Exception e) {
-            e.printStackTrace();
+    //give the opponent our ship locations
+    private void giveOpponentShips() {
+        battleshipsCommandObject.sendCommand("setup"); //say that we are giving them ships
+        
+        for(int i = 0; i<playerAircraftPanels.size(); i++) {
+            battleshipsCommandObject.sendCommand(playerAircraftPanels.get(i).getName());
         }
+        for(int i = 0; i<playerBattleshipPanels.size(); i++) {
+            battleshipsCommandObject.sendCommand(playerBattleshipPanels.get(i).getName());
+        }
+        for(int i = 0; i<playerSubmarinePanels.size(); i++) {
+            battleshipsCommandObject.sendCommand(playerSubmarinePanels.get(i).getName());
+        }
+        for(int i = 0; i<playerDestroyerPanels.size(); i++) {
+            battleshipsCommandObject.sendCommand(playerDestroyerPanels.get(i).getName());
+        }
+        for(int i = 0; i<playerMinesweeperPanels.size(); i++) {
+            battleshipsCommandObject.sendCommand(playerMinesweeperPanels.get(i).getName());
+        }
+        
+        battleshipsCommandObject.sendCommand("end"); //say that we have finished
     }
-    //maybe redo this one??
+    
+    //setup all our ships
     private void setupPlayerShips() {
         //add the aircraft panels to list
         for(int i = 0; i<BattleshipsSetupShips.aircraftLocations.size(); i++) {
@@ -380,31 +559,9 @@ public class BattleshipsGamePanel extends JPanel implements ActionListener {
         }
     }
     
-    //checks to see if there is a ship on player board and will set the panel colour
-    private void checkShip(String location) {
-        for(int i = 0; i <listOfOpponentPanels.size(); i++) {
-            if(listOfOpponentPanels.get(i).getName().equals(location)) {
-                if(!listOfOpponentPanels.get(i).getIsPlayer()) { //if it isnt the player panel
-                    if(listOfOpponentPanels.get(i).getIsHit()) {
-                        JOptionPane.showMessageDialog(this, "You have already shot at that panel!", "Invalid Location!", JOptionPane.ERROR_MESSAGE);
-                    } else {
-                        battleLog.append(location + " was shot at!\n");
-                        battleshipsCommandObject.sendCommand(location); //send command
-                        listOfOpponentPanels.get(i).setHit();
-                        
-                        if(listOfOpponentPanels.get(i).getHasShip()) {
-                            battleLog.append("You hit one!\n");
-                            isMyTurn = true;
-                        } else {
-                            battleLog.append("You missed!\n");
-                            isMyTurn = false;
-                            battleLog.append("It is no longer your turn!\n");
-                        }
-                    }
-                }
-                break; //for some reason it loops through twice so break out of it
-            }
-        }
+    //set the opponents name on their grid
+    private void setOpponentName() {
+        opponentLabel.setText(opponentName + "'s grid");
     }
     
     //setup the opponent ships
@@ -420,35 +577,29 @@ public class BattleshipsGamePanel extends JPanel implements ActionListener {
         }
     }
     
-    //give the opponent our ship locations
-    private void giveOpponentShips() {
-        battleshipsCommandObject.sendCommand("setup"); //say that we are giving them ships
-        
-        for(int i = 0; i<playerAircraftPanels.size(); i++) {
-            battleshipsCommandObject.sendCommand(playerAircraftPanels.get(i).getName());
-        }
-        for(int i = 0; i<playerBattleshipPanels.size(); i++) {
-            battleshipsCommandObject.sendCommand(playerBattleshipPanels.get(i).getName());
-        }
-        for(int i = 0; i<playerSubmarinePanels.size(); i++) {
-            battleshipsCommandObject.sendCommand(playerSubmarinePanels.get(i).getName());
-        }
-        for(int i = 0; i<playerDestroyerPanels.size(); i++) {
-            battleshipsCommandObject.sendCommand(playerDestroyerPanels.get(i).getName());
-        }
-        for(int i = 0; i<playerMinesweeperPanels.size(); i++) {
-            battleshipsCommandObject.sendCommand(playerMinesweeperPanels.get(i).getName());
-        }
-        
-        battleshipsCommandObject.sendCommand("end"); //say that we have finished
-    }
     
+    //
+    //MISC.
+    //
+    
+    //when we lose connection
+    private void lostConnection() {
+        JOptionPane.showMessageDialog(this, "We have lost connection with the other player! Sorry!", "Oh Noes!", JOptionPane.ERROR_MESSAGE);
+        isMyTurn = false;
+        running = false;
+        try {
+            connection.close();
+        } catch(Exception e) {
+            e.printStackTrace();
+        }
+    }
+        
     
     public void actionPerformed(ActionEvent e) {
         String location = controlLocationLabel.getText();
         if(isMyTurn) {
-            battleshipsCommandObject.sendCommand(location);
-            checkShip(location);
+            battleshipsCommandObject.sendCommand("shot");
+            sendShot(location);
         } else {
             battleLog.append("It is not your turn!\n");
         }
