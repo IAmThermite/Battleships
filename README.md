@@ -4,7 +4,7 @@
   * Get stakeholder feedback
   
   * BattleshipsGamePanel.java
-   * Finish networking
-   * Get the opponents name over network
-   * Get the location of the opponents ships over network
-   * Make the game logic
+   * Finish the game logic
+     * Couter for number of ships destroyed then send a messaged to opponent
+  
+  * Tidy up code
