@@ -2,9 +2,9 @@
 
 ## TO DO
   * Get stakeholder feedback
-  
-  * BattleshipsGamePanel.java
-   * Finish the game logic
-     * Couter for number of ships destroyed then send a messaged to opponent
-  
-  * Tidy up code
+  * Update help file
+  * Finish testing
+  * Finish this file properly
+
+## HOW TO PLAY
+(Complete this)
