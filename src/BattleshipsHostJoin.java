@@ -383,7 +383,6 @@ public class BattleshipsHostJoin extends JPanel implements ActionListener {
             BattleshipsMainFrame.frame.dispose();
             BattleshipsSetupShips s = new BattleshipsSetupShips();
         } else {
-            System.out.println("fail " + username);
         }
     }
     
@@ -394,7 +393,6 @@ public class BattleshipsHostJoin extends JPanel implements ActionListener {
             BattleshipsMainFrame.frame.dispose();
             BattleshipsSetupShips s = new BattleshipsSetupShips();
         } else {
-            System.out.println("fail " + username);
         }
     }
     
