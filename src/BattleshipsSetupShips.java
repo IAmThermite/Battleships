@@ -499,7 +499,6 @@ public class BattleshipsSetupShips extends JFrame implements ActionListener {
                         return false;
                     }
                 } else { //should never come to this statement
-                    System.out.println("Something went wrong!");
                     return false;
                 }
             }
