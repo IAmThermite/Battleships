@@ -1,27 +1,36 @@
 #### HOW TO PLAY ####
+
+Take a look at https://github.com/LuciusDev/Battleships to see
+pictures and stuff.
+
 1. Host a game
     If you want to make a new game you need to know your LAN IP address
-    To find this open up the console and type 'ipconfig'
-    Choose a port number (1024-65535)
-    Give the port number and IP address (hostname) to your friend
+    To find this open up the console and type 'ipconfig' (or 'ifconfig')
+    Choose a port number (1025-65535)
+    Give the port number and IP address (hostname) to your opponent
     Click 'Host'
 
 2. Join a game
-    If your friend has made a game then you need to get the hostname and port
+    If you are joining a game then you need to get the hostname and port
     Click 'Join'
 
-3. Play the game    
+3. Play the game
     You should then see a grid.
+    Click 'Change Direction' to change the orientation that the ship
+    will be placed with (Down/Right)
     Click on a square and then the ship button to place
-    Click 'Change Direction' to swap the orientation
-    Once you have placed all ships click 'Done'
+    Once you have placed all 5 ships click 'Done'
     
-    You should now see a new screen with two fields similar to the last
-    When it is your turn you will be notified in the log on the top right
+    You should now see a new screen with two fields similar to
+    the last
+    When it is your turn you will be notified in the log on the
+    top right
     Click on a loctation on the bottom screen and click 'FIRE!'
     If you hit your opponents ship you get another go
     If you miss it will be your opponents turn
     
     First person to destroy all ships wins!
+    
+    Enjoy!
     
 ~~~ Made by Luke Honiss 2016 (c)~~~
