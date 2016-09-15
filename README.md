@@ -2,7 +2,6 @@
 
 ## TO DO
   * Get stakeholder feedback
-  * Update help.txt - link to this page
   * Finish testing
 
 ## HOW TO PLAY
