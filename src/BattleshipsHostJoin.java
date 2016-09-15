@@ -348,8 +348,11 @@ public class BattleshipsHostJoin extends JPanel implements ActionListener {
         JTextArea textArea = new JTextArea();
         textArea.setFont(BattleshipsMainFrame.SMALL_FONT);
         
+        
         try {
-            BufferedReader reader = new BufferedReader(new FileReader("assets/help.txt"));
+            InputStream input = getClass().getResourceAsStream("assets/help.txt"); 
+            BufferedReader reader = new BufferedReader(new InputStreamReader(input));
+            
             String line = reader.readLine();
             
             while (line != null) { //while the line is not blank
