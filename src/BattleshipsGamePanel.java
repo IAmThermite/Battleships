@@ -63,7 +63,6 @@ public class BattleshipsGamePanel extends JPanel implements ActionListener {
     private boolean destroyerSunk = false;
     private boolean minesweeperSunk = false;
     
-    
     private final int TOTAL_LENGTH = BattleshipsSetupShips.AIRCRAFT_LENGTH + BattleshipsSetupShips.BATTLESHIP_LENGTH + BattleshipsSetupShips.SUBMARINE_LENGTH + BattleshipsSetupShips.DESTROYER_LENGTH + BattleshipsSetupShips.MINESWEEPER_LENGTH;
     
     public BattleshipsGamePanel() {
@@ -163,7 +162,7 @@ public class BattleshipsGamePanel extends JPanel implements ActionListener {
         //add
         controlPanel.add(controlFireButton, c);
         
-        
+        JOptionPane.showMessageDialog(null, "Waiting for other player to finih... (Click OK)", "Waiting", JOptionPane.INFORMATION_MESSAGE);
         
         //add all the panels/log
         add(playerPanel);
@@ -181,6 +180,7 @@ public class BattleshipsGamePanel extends JPanel implements ActionListener {
         commandObject = new GetCommand();
         Thread t1 = new Thread(commandObject);
         t1.start();
+        
         
         //give the opponent important stuff
         giveOpponentName();
@@ -247,9 +247,12 @@ public class BattleshipsGamePanel extends JPanel implements ActionListener {
                                     break;
                                 } else if(number > myNumber) {
                                     isMyTurn = false;
+                                    JOptionPane.showMessageDialog(null, opponentName + " is starting!", opponentName + " is starting", JOptionPane.INFORMATION_MESSAGE);
                                     battleLog.append(opponentName + " is starting!\n");
                                 } else if(number < myNumber){
                                     isMyTurn = true;
+                                    JOptionPane.showMessageDialog(null, "We are starting!", "We are starting", JOptionPane.INFORMATION_MESSAGE);
+                                    
                                     battleLog.append("We are starting!\n");
                                 } else {
                                     giveRandomNumber();
@@ -326,6 +329,7 @@ public class BattleshipsGamePanel extends JPanel implements ActionListener {
                     battleLog.append(opponentName + " hit one!\n");
                     isMyTurn = false;
                 } else { //otherwise it is now since they missed
+                    JOptionPane.showMessageDialog(this, "It is now your turn!", opponentName + " missed!", JOptionPane.INFORMATION_MESSAGE);
                     battleLog.append(opponentName + " missed!\n");
                     isMyTurn = true;
                 }
@@ -339,43 +343,45 @@ public class BattleshipsGamePanel extends JPanel implements ActionListener {
         //if we have already sunk the ship dont prompt the user again
         if(!aircraftSunk) {
             if(numAircraftHit == BattleshipsSetupShips.AIRCRAFT_LENGTH) {
+                    JOptionPane.showMessageDialog(this, "You sunk " + opponentName + "'s Aircraft Carrier!", "Ship Sunk!", JOptionPane.ERROR_MESSAGE);
                 battleLog.append("You sunk " + opponentName + "'s Aircraft Carrier!\n");
                 aircraftSunk = true;
             }
         } 
         if(!battleshipSunk) {
             if(numBattleshipHit == BattleshipsSetupShips.BATTLESHIP_LENGTH) {
+                JOptionPane.showMessageDialog(this, "You sunk " + opponentName + "'s Battleship!", "Ship Sunk!", JOptionPane.ERROR_MESSAGE);
                 battleLog.append("You sunk " + opponentName + "'s Battleship!\n");
                 battleshipSunk = true;
             }
         }
         if(!submarineSunk) {
             if(numSubmarineHit == BattleshipsSetupShips.SUBMARINE_LENGTH) {
+                JOptionPane.showMessageDialog(this, "You sunk " + opponentName + "'s Submarine!", "Ship Sunk!", JOptionPane.ERROR_MESSAGE);
                 battleLog.append("You sunk " + opponentName + "'s Submarine!\n");
                 submarineSunk = true;
             }
         }
         if(!destroyerSunk) {
             if(numDestroyerHit == BattleshipsSetupShips.DESTROYER_LENGTH) {
+                JOptionPane.showMessageDialog(this, "You sunk " + opponentName + "'s Destroyer!", "Ship Sunk!", JOptionPane.ERROR_MESSAGE);
                 battleLog.append("You sunk " + opponentName + "'s Destroyer!\n");
                 destroyerSunk = true;
             }
         }
         if(!minesweeperSunk) {
             if(numMinesweeperHit == BattleshipsSetupShips.MINESWEEPER_LENGTH) {
+                JOptionPane.showMessageDialog(this, "You sunk " + opponentName + "'s Battleship!", "Ship Sunk!", JOptionPane.ERROR_MESSAGE);
                 battleLog.append("You sunk " + opponentName + "'s Minesweeper!\n");
                 minesweeperSunk = true;
             }
         }
         
         if(aircraftSunk && battleshipSunk && submarineSunk && destroyerSunk && minesweeperSunk) {
+            battleshipsCommandObject.sendCommand("end"); //we need to call the end command to exit out of the loop
             battleshipsCommandObject.sendCommand("win");
             JOptionPane.showMessageDialog(this, "You sunk all " + opponentName + "'s ships! You win!", "You Win!", JOptionPane.INFORMATION_MESSAGE);
-            try {
-                connection.close();
-            } catch(Exception e) {
-                e.printStackTrace();
-            }
+            System.exit(0);
         }
     }
     
@@ -397,6 +403,7 @@ public class BattleshipsGamePanel extends JPanel implements ActionListener {
                             battleLog.append("You missed!\n");
                             isMyTurn = false;
                             battleshipsCommandObject.sendCommand("end");
+                            JOptionPane.showMessageDialog(this, "It is no longer your turn!", "You missed!", JOptionPane.INFORMATION_MESSAGE);
                             battleLog.append("It is no longer your turn!\n");
                         }
                     }
@@ -442,11 +449,7 @@ public class BattleshipsGamePanel extends JPanel implements ActionListener {
         running = false;
         isMyTurn = false;
         JOptionPane.showMessageDialog(this, opponentName + " sunk all your ships! Game Over!", "You Lose :(", JOptionPane.INFORMATION_MESSAGE);
-        try { //closing the connection, will prompt the user that the connection has failed. need to fix
-            connection.close();
-        } catch(Exception e) {
-            e.printStackTrace();
-        }
+        System.exit(0);
     }
     
     
@@ -598,8 +601,8 @@ public class BattleshipsGamePanel extends JPanel implements ActionListener {
     public void actionPerformed(ActionEvent e) {
         String location = controlLocationLabel.getText();
         if(isMyTurn) {
-            battleshipsCommandObject.sendCommand("shot");
             sendShot(location);
+            battleshipsCommandObject.sendCommand("shot");
         } else {
             battleLog.append("It is not your turn!\n");
         }
