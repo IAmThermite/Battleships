@@ -50,12 +50,6 @@ public class BattleshipsSetupShips extends JFrame implements ActionListener {
     private String currentLocation = "A1";
     private String[] letters = {"A", "B", "C", "D", "E", "F", "G", "H", "I", "J"};
     
-    private boolean aircraftSet = false;
-    private boolean battleshipSet = false;
-    private boolean submarineSet = false;
-    private boolean destroyerSet = false;
-    private boolean minesweeperSet = false;
-    
     private int shipsPlaced = 0; //number of ships placed
     
     private JLabel selectedLabel = new JLabel(currentLocation, JLabel.CENTER);
@@ -323,78 +317,57 @@ public class BattleshipsSetupShips extends JFrame implements ActionListener {
 
 
     //initialise the ships variables
-    private void setShip(int size) {
+    private void setShip(Object source, int size) {
         if(validate(size)) {            
-            if(size == AIRCRAFT_LENGTH) {
-                if(!aircraftSet) {
-                    aircraftShip = new Ship(currentLocation, AIRCRAFT_LENGTH, currentDirection);
-                    aircraftLocations = aircraftShip.getLocations();
-                    
-                    if(aircraftShip.getSet()) { //check to see if the ship is validated correctly
-                        aircraftSet = true;
-                    } else { //unset the variables if failed
-                        aircraftShip = null;
-                        aircraftLocations = null;
-                    }
-                } else {
-                    JOptionPane.showMessageDialog(this, "You have already set this ship! Add another or press done to continue!", "Ship Already Set!", JOptionPane.ERROR_MESSAGE);
+            if(source == aircraftButton) {
+                aircraftShip = new Ship(currentLocation, AIRCRAFT_LENGTH, currentDirection);
+                aircraftLocations = aircraftShip.getLocations();
+                
+                if(aircraftShip.getSet()) { //check to see if the ship is validated correctly
+                    aircraftButton.setEnabled(false);
+                } else { //unset the variables if failed
+                    aircraftShip = null;
+                    aircraftLocations = null;
                 }
-            } else if(size == BATTLESHIP_LENGTH) {
-                if(!battleshipSet) {
-                    battleshipShip = new Ship(currentLocation, BATTLESHIP_LENGTH, currentDirection);
-                    battleshipLocations = battleshipShip.getLocations();
-                    
-                    if(battleshipShip.getSet()) { //check to see if the ship is validated correctly
-                        battleshipSet = true;
-                    } else { //unset the variables if failed
-                        battleshipShip = null;
-                        battleshipLocations = null;
-                    }
-                } else {
-                    JOptionPane.showMessageDialog(this, "You have already set this ship! Add another or press done to continue!", "Ship Already Set!", JOptionPane.ERROR_MESSAGE);
+            } else if(source == battleshipButton) {
+                battleshipShip = new Ship(currentLocation, BATTLESHIP_LENGTH, currentDirection);
+                battleshipLocations = battleshipShip.getLocations();
+                
+                if(battleshipShip.getSet()) { //check to see if the ship is validated correctly
+                    battleshipButton.setEnabled(false);
+                } else { //unset the variables if failed
+                    battleshipShip = null;
+                    battleshipLocations = null;
                 }
-            } else if(size == SUBMARINE_LENGTH) {
-                if(submarineSet) { //if the sub has been set then set the destroyer
-                    if(!destroyerSet) {
-                        destroyerShip = new Ship(currentLocation, DESTROYER_LENGTH, currentDirection);
-                        destroyerLocations = destroyerShip.getLocations();
-                        
-                        if(destroyerShip.getSet()) { //check to see if the ship is validated correctly
-                            destroyerSet = true;
-                        } else { //unset the variables if failed
-                            destroyerShip = null;
-                            destroyerLocations = null;
-                        }
-                    } else {
-                        JOptionPane.showMessageDialog(this, "You have already set this ship! Add another or press done to continue!", "Ship Already Set!", JOptionPane.ERROR_MESSAGE);
-                    }
-                } else if(submarineSet && destroyerSet) {
-                    JOptionPane.showMessageDialog(this, "You have already set this ship! Add another or press done to continue!", "Ship Already Set!", JOptionPane.ERROR_MESSAGE);
-                } else {
-                    submarineShip = new Ship(currentLocation, SUBMARINE_LENGTH, currentDirection);
-                    submarineLocations = submarineShip.getLocations();
-                    
-                    if(submarineShip.getSet()) { //check to see if the ship is validated correctly
-                        submarineSet = true;
-                    } else { //unset the variables if failed
-                        submarineShip = null;
-                        submarineLocations = null;
-                    }
+            } else if(source == submarineButton) {
+                submarineShip = new Ship(currentLocation, SUBMARINE_LENGTH, currentDirection);
+                submarineLocations = submarineShip.getLocations();
+                
+                if(submarineShip.getSet()) { //check to see if the ship is validated correctly
+                    submarineButton.setEnabled(false);
+                } else { //unset the variables if failed
+                    submarineShip = null;
+                    submarineLocations = null;
                 }
-            
-            } else if(size == MINESWEEPER_LENGTH) {
-                if(!minesweeperSet) {
-                    minesweeperShip = new Ship(currentLocation, MINESWEEPER_LENGTH, currentDirection);
-                    minesweeperLocations = minesweeperShip.getLocations();
-                    
-                    if(minesweeperShip.getSet()) { //check to see if the ship is validated correctly
-                        minesweeperSet = true;
-                    } else { //unset the variables if failed
-                        minesweeperShip = null;
-                        minesweeperLocations = null;
-                    }
-                } else {
-                    JOptionPane.showMessageDialog(this, "You have already set this ship! Add another or press done to continue!", "Ship Already Set!", JOptionPane.ERROR_MESSAGE);
+            } else if(source == destroyerButton) {
+                destroyerShip = new Ship(currentLocation, DESTROYER_LENGTH, currentDirection);
+                destroyerLocations = destroyerShip.getLocations();
+                
+                if(destroyerShip.getSet()) { //check to see if the ship is validated correctly
+                    destroyerButton.setEnabled(false);
+                } else { //unset the variables if failed
+                    destroyerShip = null;
+                    destroyerLocations = null;
+                }
+            } else if(source == minesweeperButton) {
+                minesweeperShip = new Ship(currentLocation, MINESWEEPER_LENGTH, currentDirection);
+                minesweeperLocations = minesweeperShip.getLocations();
+                
+                if(minesweeperShip.getSet()) { //check to see if the ship is validated correctly
+                    minesweeperButton.setEnabled(false);
+                } else { //unset the variables if failed
+                    minesweeperShip = null;
+                    minesweeperLocations = null;
                 }
             }
         }
@@ -675,19 +648,19 @@ public class BattleshipsSetupShips extends JFrame implements ActionListener {
             }
             
         } else if(e.getSource() == aircraftButton) {
-            setShip(AIRCRAFT_LENGTH);
-            
+            setShip(e.getSource(), AIRCRAFT_LENGTH);
+            aircraftButton.setEnabled(false);
         } else if(e.getSource() == battleshipButton) {
-            setShip(BATTLESHIP_LENGTH);
+            setShip(e.getSource(), BATTLESHIP_LENGTH);
             
         } else if(e.getSource() == submarineButton) {
-            setShip(SUBMARINE_LENGTH);
+            setShip(e.getSource(), SUBMARINE_LENGTH);
             
         } else if(e.getSource() == destroyerButton) {
-            setShip(DESTROYER_LENGTH);
+            setShip(e.getSource(), DESTROYER_LENGTH);
             
         } else if(e.getSource() == minesweeperButton) {
-            setShip(MINESWEEPER_LENGTH);
+            setShip(e.getSource(), MINESWEEPER_LENGTH);
             
         }
     }
