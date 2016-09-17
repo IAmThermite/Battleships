@@ -1,9 +1,5 @@
 **My Battleships game for my 3PR project 2016**
 
-## TO DO
-  * Get stakeholder feedback
-  * Finish testing
-
 ## HOW TO PLAY
 To start the game open up the ```Battleships.jar``` file. You will see this screen:
 
