@@ -404,7 +404,7 @@ public class BattleshipsHostJoin extends JPanel implements ActionListener {
         try { //try and make the port an int
             int portNum = Integer.parseInt(hostPortTextField.getText());
             
-            if(portNum>=1024 && portNum <=65535) { //ports less than 1024 are reserved. 65535 is the max port
+            if(portNum>=1025 && portNum <=65535) { //ports less than 1024 are reserved. 65535 is the max port
                 try { //attempt to make a new server socket
                     server = new ServerSocket(portNum);
                     connection = server.accept();
@@ -420,12 +420,12 @@ public class BattleshipsHostJoin extends JPanel implements ActionListener {
             } else { //incorrect port
                 //show error dialog invalid port
                 hostPortTextField.setText("");
-                JOptionPane.showMessageDialog(mainPanel, "Invalid Port (1024-65535 are valid)!", "Invalid Port", JOptionPane.ERROR_MESSAGE);
+                JOptionPane.showMessageDialog(mainPanel, "Invalid Port (1025-65535 are valid)!", "Invalid Port", JOptionPane.ERROR_MESSAGE);
                 
                 return false;
             }
         } catch(Exception e) { //port not a number
-            JOptionPane.showMessageDialog(mainPanel, "Invalid Port (1024-65535 are valid)!", "Invalid Port", JOptionPane.ERROR_MESSAGE);
+            JOptionPane.showMessageDialog(mainPanel, "Invalid Port (1025-65535 are valid)!", "Invalid Port", JOptionPane.ERROR_MESSAGE);
             hostPortTextField.setText("");
             
             return false;
@@ -438,31 +438,32 @@ public class BattleshipsHostJoin extends JPanel implements ActionListener {
         
         String[] parts = hostname.split( "\\." ); //split the hostname into parts. a valid ip will have 4 parts
         
-        if(parts.length == 4 || hostname.equals("localhost")) {
+        if(parts.length == 4) {
             try {
                 port = Integer.parseInt(joinPortTextField.getText());
                 try { //try to connect to a server
-                    connection = new Socket(hostname, port);
+                    connection = new Socket();
+                    connection.connect(new InetSocketAddress(hostname, port), 5000); //5 second timeout
                     
                     return true;
                 } catch(Exception e) {
                     //show failed dialog
-                    JOptionPane.showMessageDialog(mainPanel, e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+                    JOptionPane.showMessageDialog(mainPanel, e.getMessage(), "Failed to connect", JOptionPane.ERROR_MESSAGE);
                     joinPortTextField.setText("");
                     joinHostTextField.setText("");
                     
                     return false;
                 }
                 
-            } catch(Exception e) { //port not a number
-                JOptionPane.showMessageDialog(mainPanel, "Invalid Port (1024-65535 are valid)!", "Invalid Port", JOptionPane.ERROR_MESSAGE);
+            } catch(Exception e) { //port not a number or couldnt bind to it
+                JOptionPane.showMessageDialog(mainPanel, "Could not bind to port!", "Invalid Port", JOptionPane.ERROR_MESSAGE);
                 hostPortTextField.setText("");
                 
                 return false;
             }
             
         } else { //invalid hostname
-            JOptionPane.showMessageDialog(mainPanel, "Invalid ip address!", "IP Error", JOptionPane.ERROR_MESSAGE);
+            JOptionPane.showMessageDialog(mainPanel, "Invalid IP address!", "IP Error", JOptionPane.ERROR_MESSAGE);
             joinHostTextField.setText("");
             
             return false;
