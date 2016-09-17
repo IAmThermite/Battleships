@@ -162,7 +162,7 @@ public class BattleshipsGamePanel extends JPanel implements ActionListener {
         //add
         controlPanel.add(controlFireButton, c);
         
-        JOptionPane.showMessageDialog(null, "Waiting for other player to finih... (Click OK)", "Waiting", JOptionPane.INFORMATION_MESSAGE);
+        JOptionPane.showMessageDialog(null, "Waiting for other player to finish... (Click OK)", "Waiting", JOptionPane.INFORMATION_MESSAGE);
         
         //add all the panels/log
         add(playerPanel);
@@ -315,8 +315,31 @@ public class BattleshipsGamePanel extends JPanel implements ActionListener {
     //
     //shoot at a location
     private void sendShot(String location) {
-        battleshipsCommandObject.sendCommand(location);
-        checkShip(location);
+        for(int i = 0; i <listOfOpponentPanels.size(); i++) {
+            if(listOfOpponentPanels.get(i).getName().equals(location)) {
+                if(!listOfOpponentPanels.get(i).getIsPlayer()) { //if it isnt the player panel
+                    if(listOfOpponentPanels.get(i).getIsHit()) { //if it has already been shot at
+                        JOptionPane.showMessageDialog(this, "You have already shot at that panel!", "Invalid Location!", JOptionPane.ERROR_MESSAGE);
+                    } else { //if not shot at
+                        battleshipsCommandObject.sendCommand(location);
+                        
+                        battleLog.append(location + " was shot at!\n");
+                        listOfOpponentPanels.get(i).setHit();
+                        
+                        if(listOfOpponentPanels.get(i).getHasShip()) { //i hit one so it is my turn still
+                            battleLog.append("You hit one!\n");
+                            isMyTurn = true;
+                        } else { //i missed, not my turn anymore
+                            battleLog.append("You missed!\n");
+                            isMyTurn = false;
+                            battleshipsCommandObject.sendCommand("end");
+                            JOptionPane.showMessageDialog(this, "It is no longer your turn!", "You missed!", JOptionPane.INFORMATION_MESSAGE);
+                            battleLog.append("It is no longer your turn!\n");
+                        }
+                    }
+                }
+            }
+        }
     }
     
     //the opponent has shot at us, where and did it hit
@@ -385,33 +408,6 @@ public class BattleshipsGamePanel extends JPanel implements ActionListener {
         }
     }
     
-    //checks to see if there is a ship on player board and will set the panel colour
-    private void checkShip(String location) {
-        for(int i = 0; i <listOfOpponentPanels.size(); i++) {
-            if(listOfOpponentPanels.get(i).getName().equals(location)) {
-                if(!listOfOpponentPanels.get(i).getIsPlayer()) { //if it isnt the player panel
-                    if(listOfOpponentPanels.get(i).getIsHit()) {
-                        JOptionPane.showMessageDialog(this, "You have already shot at that panel!", "Invalid Location!", JOptionPane.ERROR_MESSAGE);
-                    } else {
-                        battleLog.append(location + " was shot at!\n");
-                        listOfOpponentPanels.get(i).setHit();
-                        
-                        if(listOfOpponentPanels.get(i).getHasShip()) { //i hit one so it is my turn still
-                            battleLog.append("You hit one!\n");
-                            isMyTurn = true;
-                        } else { //i missed, not my turn anymore
-                            battleLog.append("You missed!\n");
-                            isMyTurn = false;
-                            battleshipsCommandObject.sendCommand("end");
-                            JOptionPane.showMessageDialog(this, "It is no longer your turn!", "You missed!", JOptionPane.INFORMATION_MESSAGE);
-                            battleLog.append("It is no longer your turn!\n");
-                        }
-                    }
-                }
-                break; //for some reason it loops through twice so break out of it
-            }
-        }
-    }
     
     //returns the type of ship that was hit
     private String whichShip(String location) {
@@ -449,7 +445,21 @@ public class BattleshipsGamePanel extends JPanel implements ActionListener {
         running = false;
         isMyTurn = false;
         JOptionPane.showMessageDialog(this, opponentName + " sunk all your ships! Game Over!", "You Lose :(", JOptionPane.INFORMATION_MESSAGE);
+        showAllShips();
+        
         System.exit(0);
+    }
+    
+    //at the end of the game reveal all the opponents ships for 5 sec
+    private void showAllShips() {
+        for(int i = 0; i<listOfOpponentPanels.size(); i++) {
+            if(listOfOpponentPanels.get(i).getHasShip() && !listOfOpponentPanels.get(i).getIsHit()) {
+                listOfOpponentPanels.get(i).setBackground(BattleshipsMainFrame.SHIP_COLOUR); //set the colour to black
+            }
+        }
+        try {
+            Thread.sleep(5000); //sleep for 5 sec
+        } catch(Exception e) {}
     }
     
     
@@ -601,8 +611,8 @@ public class BattleshipsGamePanel extends JPanel implements ActionListener {
     public void actionPerformed(ActionEvent e) {
         String location = controlLocationLabel.getText();
         if(isMyTurn) {
-            sendShot(location);
             battleshipsCommandObject.sendCommand("shot");
+            sendShot(location);
         } else {
             battleLog.append("It is not your turn!\n");
         }
