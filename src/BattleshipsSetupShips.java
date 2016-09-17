@@ -649,19 +649,14 @@ public class BattleshipsSetupShips extends JFrame implements ActionListener {
             
         } else if(e.getSource() == aircraftButton) {
             setShip(e.getSource(), AIRCRAFT_LENGTH);
-            aircraftButton.setEnabled(false);
         } else if(e.getSource() == battleshipButton) {
             setShip(e.getSource(), BATTLESHIP_LENGTH);
-            
         } else if(e.getSource() == submarineButton) {
             setShip(e.getSource(), SUBMARINE_LENGTH);
-            
         } else if(e.getSource() == destroyerButton) {
             setShip(e.getSource(), DESTROYER_LENGTH);
-            
         } else if(e.getSource() == minesweeperButton) {
             setShip(e.getSource(), MINESWEEPER_LENGTH);
-            
         }
     }
 }
