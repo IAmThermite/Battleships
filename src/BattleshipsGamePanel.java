@@ -373,28 +373,28 @@ public class BattleshipsGamePanel extends JPanel implements ActionListener {
         } 
         if(!battleshipSunk) {
             if(numBattleshipHit == BattleshipsSetupShips.BATTLESHIP_LENGTH) {
-                JOptionPane.showMessageDialog(this, "You sunk " + opponentName + "'s Battleship!", "Ship Sunk!", JOptionPane.ERROR_MESSAGE);
+                JOptionPane.showMessageDialog(this, "You sunk " + opponentName + "'s Battleship!", "Ship Sunk!", JOptionPane.INFORMATION_MESSAGE);
                 battleLog.append("You sunk " + opponentName + "'s Battleship!\n");
                 battleshipSunk = true;
             }
         }
         if(!submarineSunk) {
             if(numSubmarineHit == BattleshipsSetupShips.SUBMARINE_LENGTH) {
-                JOptionPane.showMessageDialog(this, "You sunk " + opponentName + "'s Submarine!", "Ship Sunk!", JOptionPane.ERROR_MESSAGE);
+                JOptionPane.showMessageDialog(this, "You sunk " + opponentName + "'s Submarine!", "Ship Sunk!", JOptionPane.INFORMATION_MESSAGE);
                 battleLog.append("You sunk " + opponentName + "'s Submarine!\n");
                 submarineSunk = true;
             }
         }
         if(!destroyerSunk) {
             if(numDestroyerHit == BattleshipsSetupShips.DESTROYER_LENGTH) {
-                JOptionPane.showMessageDialog(this, "You sunk " + opponentName + "'s Destroyer!", "Ship Sunk!", JOptionPane.ERROR_MESSAGE);
+                JOptionPane.showMessageDialog(this, "You sunk " + opponentName + "'s Destroyer!", "Ship Sunk!", JOptionPane.INFORMATION_MESSAGE);
                 battleLog.append("You sunk " + opponentName + "'s Destroyer!\n");
                 destroyerSunk = true;
             }
         }
         if(!minesweeperSunk) {
             if(numMinesweeperHit == BattleshipsSetupShips.MINESWEEPER_LENGTH) {
-                JOptionPane.showMessageDialog(this, "You sunk " + opponentName + "'s Battleship!", "Ship Sunk!", JOptionPane.ERROR_MESSAGE);
+                JOptionPane.showMessageDialog(this, "You sunk " + opponentName + "'s Minesweeper!", "Ship Sunk!", JOptionPane.INFORMATION_MESSAGE);
                 battleLog.append("You sunk " + opponentName + "'s Minesweeper!\n");
                 minesweeperSunk = true;
             }
