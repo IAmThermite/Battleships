@@ -373,7 +373,7 @@ public class BattleshipsHostJoin extends JPanel implements ActionListener {
         panel.add(button);
         
         helpFrame.add(panel);
-        helpFrame.setSize(600, 400);
+        helpFrame.setSize(600, 430);
         helpFrame.setResizable(false);
         helpFrame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE); //dispose instead of exit so the other one doesnt close
         helpFrame.setVisible(true);
