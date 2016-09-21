@@ -12,7 +12,7 @@ If you click ```Host``` you will be brought to the Host screen. Here you enter a
 
 To find you ip address type ```ipconfig``` into your console (or ```ifconfig``` on Linux or Mac OSX).
 
-If you are click join, get the IP and port numbers from your opponent and enter them in to the correct fields.
+If you click ```Join```, get the IP address and port numbers from your opponent and enter them into the correct fields.
 
 ![Battleships Join][Join]
 
@@ -20,7 +20,7 @@ You should now see this screen:
 
 ![Battleships Setup][Setup]
 
-Either click on a grid location or choose a direction (either Down or Right) to begin, these can be done in any order. Then click on the ship that you want to place. If the ship will fit or doesnt overlap with another the ship will be placed. Once you have placed all five ships click ```Battle!```.
+Either click on a grid location or choose a direction by pressing ```Swap Direction``` (either "Down" or "Right") to begin, these can be done in any order. Then click on the ship that you want to place. If the ship will fit or doesnt overlap with another the ship will be placed. Once you have placed all five ships click ```Battle!```.
 
 You will now see the main game board.
 
@@ -28,7 +28,7 @@ You will now see the main game board.
 
 You will have to wait for your opponent to finish placing up their ships. When they have finished placing their ships one player will be choosen at random to start. You will be notified as to who starts in the Battle Log in the top right square.
 
-Click on a panel in the lower grid and then click fire. If you hit a ship you will get another go, if you miss it will be your opponents turn.
+Click on a panel in the lower grid and then click ```Fire```. If you hit a ship you will get another go, if you miss it will be your opponents turn.
 
 The winner is the first to destroy all ships.
 
